@@ -31,6 +31,7 @@ class Example(QWidget):
         self.btn = QPushButton('Start', self)
         self.btn.move(170, 210)
         self.btn.clicked.connect(self.doAction)
+        self.btn.clicked.connect(self.hide)
         self.btn.setStyleSheet("background-color: pink; color: blue; font: 15pt")
         self.btn.style
 
