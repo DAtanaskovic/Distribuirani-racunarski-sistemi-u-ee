@@ -5,6 +5,8 @@ from PyQt5.QtGui import QPixmap
 import sys
 from Zid import *
 from App import *
+from Igrac import *
+from IgracApp import *
 
 class Example(QWidget):
 
@@ -40,8 +42,8 @@ class Example(QWidget):
         theApp = App()
         theApp.on_execute()
 
-
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = Example()
-    sys.exit(app.exec_())
+
+     app = QApplication(sys.argv)
+     ex = Example()
+     sys.exit(app.exec_())
