@@ -66,3 +66,54 @@ class App:
                         if (keys[K_ESCAPE]):
                             self._running = False
 
+
+    def moveRight(self):
+        if (self.x + 40 <= 760):
+            broj = (self.x + 40) / 40 + self.y / 40 * 20
+            print(broj)
+            if (self.matrica[int(broj)] == 0):
+                self.block = pygame.image.load("lav.png").convert()
+                self._display_surf.blit(self.block, (self.x + 40, self.y))
+                self._display_surf.blit(self.tragovi, (self.x, self.y))
+                self.x = self.x + 40
+                self.y = self.y
+                pygame.event.pump()
+                pygame.display.update()
+
+
+    def moveLeft(self):
+        if (self.x - 40 >= 0):
+            broj = (self.x - 40) / 40 + self.y / 40 * 20
+            print(broj)
+            if (self.matrica[int(broj)] == 0):
+                self.block = pygame.image.load("lav.png").convert()
+                self._display_surf.blit(self.block, (self.x - 40, self.y))
+                self._display_surf.blit(self.tragovi, (self.x, self.y))
+                self.x = self.x - 40
+                self.y = self.y
+                pygame.event.pump()
+                pygame.display.update()
+
+    def moveUp(self):
+        if (self.y - 40 >= 0):
+            broj = self.x / 40 + (self.y - 40) / 40 *20
+            print(broj)
+            if (self.matrica[int(broj)] == 0):
+                self.block = pygame.image.load("lav.png").convert()
+                self._display_surf.blit(self.block, (self.x, self.y - 40))
+                self._display_surf.blit(self.tragovi, (self.x, self.y))
+                self.y = self.y - 40
+                pygame.event.pump()
+                pygame.display.update()
+
+    def moveDown(self):
+        if (self.y + 40 <= 560):
+            broj = self.x/40 + (self.y + 40)/40 * 20
+            print(broj)
+            if(self.matrica[int(broj)] == 0 ):
+                self.block = pygame.image.load("lav.png").convert()
+                self._display_surf.blit(self.block, (self.x, self.y + 40))
+                self._display_surf.blit(self.tragovi, (self.x, self.y))
+                self.y = self.y + 40
+                pygame.event.pump()
+                pygame.display.update()
