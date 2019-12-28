@@ -1,6 +1,6 @@
 import pygame
 
-
+# u matrici 5 ce biti za zamku
 class Maze:
     def __init__(self):
         self.M =20
