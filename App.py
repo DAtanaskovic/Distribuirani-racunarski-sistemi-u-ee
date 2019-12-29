@@ -29,6 +29,14 @@ class App:
         self.Zamka3 = Value('i', 0)  # neaktivna, ako je aktivna stavljace se 1
         self.Zamka3X = 0
         self.Zamka3Y = 0
+        # --------------------------------------------------------------------------
+        # neprijatelji
+        self.randomEnemy_x1 = 0
+        self.randomEnemy_y1 = 0
+        self.randomEnemy_x2 = 0
+        self.randomEnemy_y2 = 0
+        self.enemy1 = None
+        self.enemy2 = None
 
     def on_init(self):
         pygame.init()
@@ -49,6 +57,7 @@ class App:
         self.on_render()
         self.block = pygame.image.load("lav.png").convert()
         self._display_surf.blit(self.block, (self.x, self.y))
+        self.setup_enemies_randomly()
         self.prikazi_zamke()
         pygame.display.update()
         self.on_execute_Igrac()
@@ -211,9 +220,27 @@ class App:
             print('3.zamka')
 
 
-def otvorena_zamka(broj_zamke):
-    sleep(5)
-    broj_zamke.value = 0
+    def otvorena_zamka(broj_zamke):
+        sleep(5)
+        broj_zamke.value = 0
 
 
+    def setup_enemies_randomly(self):
+        number_of_enemies=0
+        while(True):
 
+          self.randomEnemy_x1=int(random.uniform(0, 19))
+          self.randomEnemy_y1=int(random.uniform(0, 14))
+          self.randomEnemy_x2=int(random.uniform(0, 19))
+          self.randomEnemy_y2=int(random.uniform(0, 14))
+
+          number_of_first_enemy=int(self.randomEnemy_x1+self.randomEnemy_y1*20)
+          number_of_second_enemy=int(self.randomEnemy_x2+self.randomEnemy_y2*20)
+
+          if(self.matrica[int(number_of_first_enemy)]!=0 or self.matrica[int(number_of_second_enemy)]!=0):#treba dodati da ne moze da dodje na matrica[1][2] mesto
+             continue
+          self.enemy1 = pygame.image.load("enemy1.jpg").convert()
+          self.enemy2 = pygame.image.load("enemy2.jpg").convert()
+          self._display_surf.blit(self.enemy1, [self.randomEnemy_x1 * 40, self.randomEnemy_y1 * 40])
+          self._display_surf.blit(self.enemy2, [self.randomEnemy_x2* 40, self.randomEnemy_y2 * 40])
+          break
