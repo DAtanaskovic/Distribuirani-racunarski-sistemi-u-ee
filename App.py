@@ -100,11 +100,11 @@ class App:
                 self._display_surf.blit(self.block, (self.x + 40, self.y))
                 if (self.matrica[int(self.x / 40 + self.y / 40 * 20)] != 9):
                     self._display_surf.blit(self.tragovi, (self.x, self.y))
+                self.proveri_da_je_zamka()
                 self.x = self.x + 40
                 self.y = self.y
                 pygame.event.pump()
                 pygame.display.update()
-                self.proveri_da_je_zamka()
 
     def moveLeft(self):
         if (self.x - 40 >= 0):
@@ -115,11 +115,11 @@ class App:
                 self._display_surf.blit(self.block, (self.x - 40, self.y))
                 if (self.matrica[int(self.x / 40 + self.y / 40 * 20)] != 9):
                     self._display_surf.blit(self.tragovi, (self.x, self.y))
+                self.proveri_da_je_zamka()
                 self.x = self.x - 40
                 self.y = self.y
                 pygame.event.pump()
                 pygame.display.update()
-                self.proveri_da_je_zamka()
 
     def moveUp(self):
         if (self.y - 40 >= 0):
@@ -130,10 +130,10 @@ class App:
                 self._display_surf.blit(self.block, (self.x, self.y - 40))
                 if (self.matrica[int(self.x / 40 + self.y / 40 * 20)] != 9):
                     self._display_surf.blit(self.tragovi, (self.x, self.y))
+                self.proveri_da_je_zamka()
                 self.y = self.y - 40
                 pygame.event.pump()
                 pygame.display.update()
-                self.proveri_da_je_zamka()
 
     def moveDown(self):
         if (self.y + 40 <= 560):
@@ -144,10 +144,10 @@ class App:
                 self._display_surf.blit(self.block, (self.x, self.y + 40))
                 if(self.matrica[int(self.x/40 + self.y /40 * 20)] != 9):
                     self._display_surf.blit(self.tragovi, (self.x, self.y))
+                self.proveri_da_je_zamka()
                 self.y = self.y + 40
                 pygame.event.pump()
                 pygame.display.update()
-                self.proveri_da_je_zamka()
 
     def prikazi_zamke(self):
         broj_zamki = 0
@@ -182,7 +182,6 @@ class App:
             self.block = pygame.image.load("zamkaakt.jpg").convert()  #slike pokrenute zamke
             self._display_surf.blit(self.block, (self.x, self.y))
             pygame.display.update()
-            print(broj)
 
             self.matrica[int(broj)] = 9
             print(self.matrica[int(broj)])
@@ -220,10 +219,6 @@ class App:
             print('3.zamka')
 
 
-    def otvorena_zamka(broj_zamke):
-        sleep(5)
-        broj_zamke.value = 0
-
 
     def setup_enemies_randomly(self):
         number_of_enemies=0
@@ -244,3 +239,7 @@ class App:
           self._display_surf.blit(self.enemy1, [self.randomEnemy_x1 * 40, self.randomEnemy_y1 * 40])
           self._display_surf.blit(self.enemy2, [self.randomEnemy_x2* 40, self.randomEnemy_y2 * 40])
           break
+
+def otvorena_zamka(broj_zamke):
+  sleep(5)
+  broj_zamke.value = 0
