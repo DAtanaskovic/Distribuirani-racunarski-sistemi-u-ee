@@ -2,42 +2,47 @@ from Igrac import *
 import pygame
 from pygame.locals import *
 from App import  *
-
-class IgracApp:
-    def __init(self):
-        self.running = True
-
-    def on_event(self, event):
-        if event.type == QUIT:
-            self_running = False
-
-    def on_execute(self):
-        #self.on_init()
-        #if (self.on_init() == False):
-           # self.running = False
-            while (True):
-                pygame.event.pump()
-                keys = pygame.key.get_pressed()
-
-                if (keys[K_RIGHT]):
-                    self.moveRight()
-
-                if (keys[K_LEFT]):
-                    self.igrac.moveLeft()
-
-                if (keys[K_UP]):
-                    self.igrac.moveUp()
-
-                if (keys[K_DOWN]):
-                    self.igrac.moveDown()
-
-                if (keys[K_ESCAPE]):
-                    self._running = False
+from multiprocessing import Process, Queue, Value
+from Zid import *
 
 
-    def moveRight(self):
-       # self.x = self.x + self.speed
-        self.block = pygame.image.load("lav.png").convert()
-        self._display_surf.blit(self.block, (10 * 40, 10 * 40))
-        pygame.display.update()
+def igrac_proces(x, y, queue):
+    trenutnoX = x.value
+    trenutnoY = y.value
+    matrica = Maze().maze
+    while True:
+        if not queue.empty():
+            broj = queue.get()
+            if(broj == 1):  # levo
+                if (trenutnoX - 40 >= 0):
+                    broj = (trenutnoX - 40) / 40 + trenutnoY / 40 * 20
+                    # print(broj)
+                    if (matrica[int(broj)] != 1):  # ovde je sad potrebno proveriti matricu
+                        # postavljanje slike lava na novu poziciju
+                        #if (self.matrica[int(self.x / 40 + self.y / 40 * 20)] != 9):  postavljanje tragova
+                        #  self._display_surf.blit(self.tragovi, (self.x, self.y))
+                        # provera da li je zamka
+                        trenutnoX = trenutnoX - 40
+                        trenutnoY = trenutnoY
+                        #update prikaza
+            if(broj == 2):  # desno
+                if (trenutnoX + 40 <= 760):
+                    broj = (trenutnoX + 40) / 40 + trenutnoY / 40 * 20
+                    if (matrica[int(broj)] != 1):
+                        trenutnoX = trenutnoX + 40
+                        trenutnoY = trenutnoY
+            if(broj == 3):  # gore
+                if (trenutnoY - 40 >= 0):
+                    broj = trenutnoX / 40 + (trenutnoY - 40) / 40 * 20
+                    if (matrica[int(broj)] != 1):
+                        trenutnoY = trenutnoY - 40
+            if(broj == 4):  # dole
+                print('dole')
+                if (trenutnoY + 40 <= 560):
+                    broj = trenutnoX / 40 + (trenutnoY + 40) / 40 * 20
+                    if (matrica[int(broj)] != 1):
+                        trenutnoY = trenutnoY + 40
+            x.value = trenutnoX
+            y.value = trenutnoY
+            print('iz procesa', x.value, y.value)
 

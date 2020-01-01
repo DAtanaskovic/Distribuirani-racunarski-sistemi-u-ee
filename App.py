@@ -1,25 +1,36 @@
 import  pygame
 from Zid import *
 from Igrac import*
+import IgracApp
 from time import sleep
 from pygame.locals import *
 import  random
 import multiprocessing
-from multiprocessing import Value
-
+from multiprocessing import Process, Queue, Value
+from PyQt5.QtWidgets import (QWidget, QHBoxLayout,
+                             QLabel, QApplication, QPushButton)
 class App:
     windowWidth = 800
     windowHeight = 600
 
     def __init__(self):
-        global matrica
+        self.Rezultat1 = 0
+        self.Rezultat2 = 0
         self._display_surf = None
         self._block_surf = None
         self._image_surf = None
         self.maze = Maze()
         self.matrica = self.maze.maze
-        self.x = 1 * 40
-        self.y = 0 * 40
+        self.x = Value('i', 40)
+        self.y = Value('i', 0)
+        self.xProslo = 40
+        self.yProslo = 0
+        # --- igrac2 ----
+        self.x2 = Value('i', 80)
+        self.y2 = Value('i', 0)
+        self.x2Proslo = 80
+        self.y2Proslo = 0
+        # --- ---- ----
         self.Zamka1 = Value('i', 0)  # neaktivna, ako je aktivna stavljace se 1
         self.Zamka1X = 0
         self.Zamka1Y = 0
@@ -37,6 +48,8 @@ class App:
         self.randomEnemy_y2 = 0
         self.enemy1 = None
         self.enemy2 = None
+        # ---------------------------------
+
 
     def on_init(self):
         pygame.init()
@@ -44,6 +57,7 @@ class App:
         self._block_surf = pygame.image.load("zid.png").convert()
         self._image_surf = pygame.image.load("lav.png").convert()
         self.tragovi = pygame.image.load("trag.jpg").convert()
+        self.tragovi2 = pygame.image.load("trag2.jpg").convert()
 
     def on_render(self):
         self._display_surf.fill((34, 177, 76))
@@ -56,8 +70,9 @@ class App:
         self.on_init()
         self.on_render()
         self.block = pygame.image.load("lav.png").convert()
-        self._display_surf.blit(self.block, (self.x, self.y))
-        self.setup_enemies_randomly()
+        self._display_surf.blit(self.block, (self.x.value, self.y.value))
+        self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
+        #self.setup_enemies_randomly()
         self.prikazi_zamke()
         pygame.display.update()
         self.on_execute_Igrac()
@@ -66,35 +81,62 @@ class App:
         #self.on_init()
         #if (self.on_init() == False):
            # self.running = False
+            red = Queue()
+            red2 = Queue()
+            p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
+            p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
+            p1.start()
+            p2.start()
             clock = pygame.time.Clock()
             while (True):
                 clock.tick(60)
                 keys = 0
                 self.osvezi_sve_zamke()
+                #self.prikazi_rezultat()
                 for event in pygame.event.get():
                     pygame.event.pump()
                     keys = pygame.key.get_pressed()
+                    self.osvezi_prikaz()
                     if event.type == pygame.KEYDOWN:
                         if (keys[K_RIGHT]):
-                            self.moveRight()
+                            #self.moveRight()
+                            red.put(2)
 
                         if (keys[K_LEFT]):
-                            self.moveLeft()
+                            #self.moveLeft()
+                            red.put(1)
 
                         if (keys[K_UP]):
-                            self.moveUp()
+                            #self.moveUp()
+                            red.put(3)
 
                         if (keys[K_DOWN]):
-                            self.moveDown()
+                            red.put(4)
+                           # self.moveDown()
+
+                        if (keys[K_d]):
+                            # self.moveRight()
+                            red2.put(2)
+
+                        if (keys[K_a]):
+                            # self.moveLeft()
+                            red2.put(1)
+
+                        if (keys[K_w]):
+                            # self.moveUp()
+                            red2.put(3)
+
+                        if (keys[K_s]):
+                            red2.put(4)
+                        # self.moveDown()
 
                         if (keys[K_ESCAPE]):
                             self._running = False
 
-
     def moveRight(self):
         if (self.x + 40 <= 760):
-            broj = (self.x + 40) / 40 + self.y / 40 * 20
             #print(broj)
+            broj = (self.x + 40) / 40 + self.y / 40 * 20
             if (self.matrica[int(broj)] != 1):
                 self.block = pygame.image.load("lav.png").convert()
                 self._display_surf.blit(self.block, (self.x + 40, self.y))
@@ -177,23 +219,45 @@ class App:
                 break
 
     def proveri_da_je_zamka(self):
-        broj = self.x / 40 + self.y / 40 * 20
+        broj = self.x.value / 40 + self.y.value / 40 * 20
         if(self.matrica[int(broj)]  == 5):
             self.block = pygame.image.load("zamkaakt.jpg").convert()  #slike pokrenute zamke
-            self._display_surf.blit(self.block, (self.x, self.y))
+            self._display_surf.blit(self.block, (self.x.value, self.y.value))
             pygame.display.update()
 
             self.matrica[int(broj)] = 9
             print(self.matrica[int(broj)])
-            if(self.x == self.Zamka1X and self.y == self.Zamka1Y):
+            if(self.x.value == self.Zamka1X and self.y.value == self.Zamka1Y):
                 self.Zamka1.value = 1
                 other_proc = multiprocessing.Process(target=otvorena_zamka, args=(self.Zamka1, ))
                 other_proc.start()
-            if (self.x == self.Zamka2X and self.y == self.Zamka2Y):
+            if (self.x.value == self.Zamka2X and self.y.value == self.Zamka2Y):
                 self.Zamka2.value = 1
                 other_proc = multiprocessing.Process(target=otvorena_zamka, args=(self.Zamka2, ))
                 other_proc.start()
-            if (self.x == self.Zamka3X and self.y == self.Zamka3Y):
+            if (self.x.value == self.Zamka3X and self.y.value == self.Zamka3Y):
+                self.Zamka3.value = 1
+                other_proc = multiprocessing.Process(target=otvorena_zamka, args=(self.Zamka3, ))
+                other_proc.start()
+
+    def proveri_da_je_zamka2(self):
+        broj = self.x2.value / 40 + self.y2.value / 40 * 20
+        if(self.matrica[int(broj)]  == 5):
+            self.block = pygame.image.load("zamkaakt.jpg").convert()  #slike pokrenute zamke
+            self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
+            pygame.display.update()
+
+            self.matrica[int(broj)] = 9
+            print(self.matrica[int(broj)])
+            if(self.x2.value == self.Zamka1X and self.y2.value == self.Zamka1Y):
+                self.Zamka1.value = 1
+                other_proc = multiprocessing.Process(target=otvorena_zamka, args=(self.Zamka1, ))
+                other_proc.start()
+            if (self.x2.value == self.Zamka2X and self.y2.value == self.Zamka2Y):
+                self.Zamka2.value = 1
+                other_proc = multiprocessing.Process(target=otvorena_zamka, args=(self.Zamka2, ))
+                other_proc.start()
+            if (self.x2.value == self.Zamka3X and self.y2.value == self.Zamka3Y):
                 self.Zamka3.value = 1
                 other_proc = multiprocessing.Process(target=otvorena_zamka, args=(self.Zamka3, ))
                 other_proc.start()
@@ -204,20 +268,19 @@ class App:
             self.matrica[int(broj)] = 5
             self.block = pygame.image.load("zamka.jpg").convert()  # slika zamke
             self._display_surf.blit(self.block, (self.Zamka1X, self.Zamka1Y))
-            print('1.zamka')
+            #print('1.zamka')
         if (self.Zamka2.value == 0):
             broj = self.Zamka2X / 40 + self.Zamka2Y / 40 * 20
             self.matrica[int(broj)] = 5
             self.block = pygame.image.load("zamka.jpg").convert()  # slika zamke
             self._display_surf.blit(self.block, (self.Zamka2X, self.Zamka2Y))
-            print('2.zamka')
+            #print('2.zamka')
         if (self.Zamka3.value == 0):
             broj = self.Zamka3X / 40 + self.Zamka3Y / 40 * 20
             self.matrica[int(broj)] = 5
             self.block = pygame.image.load("zamka.jpg").convert()  # slika zamke
             self._display_surf.blit(self.block, (self.Zamka3X, self.Zamka3Y))
-            print('3.zamka')
-
+            #print('3.zamka')
 
 
     def setup_enemies_randomly(self):
@@ -237,8 +300,41 @@ class App:
           self.enemy1 = pygame.image.load("enemy1.jpg").convert()
           self.enemy2 = pygame.image.load("enemy2.jpg").convert()
           self._display_surf.blit(self.enemy1, [self.randomEnemy_x1 * 40, self.randomEnemy_y1 * 40])
-          self._display_surf.blit(self.enemy2, [self.randomEnemy_x2* 40, self.randomEnemy_y2 * 40])
+          self._display_surf.blit(self.enemy2, [self.randomEnemy_x2 * 40, self.randomEnemy_y2 * 40])
           break
+
+    def osvezi_prikaz(self):
+        if(self.x.value != self.xProslo or self.y.value != self.yProslo):
+            self.block = pygame.image.load("lav.png").convert()
+            self._display_surf.blit(self.block, (self.x.value, self.y.value))
+            broj = int(self.xProslo / 40 + self.yProslo / 40 * 20)
+            if(self.matrica[broj] == 0):
+                self._display_surf.blit(self.tragovi, (self.xProslo, self.yProslo))
+                self.matrica[broj] = 3
+            if (self.matrica[broj] == 4):
+                self._display_surf.blit(self.tragovi2, (self.xProslo, self.yProslo))
+            if (self.matrica[broj] == 3):
+                self._display_surf.blit(self.tragovi, (self.xProslo, self.yProslo))
+            self.xProslo = self.x.value
+            self.yProslo = self.y.value
+            self.proveri_da_je_zamka()
+        if (self.x2.value != self.x2Proslo or self.y2.value != self.y2Proslo):
+            self.block = pygame.image.load("lav.png").convert()
+            self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
+            broj = int(self.x2Proslo / 40 + self.y2Proslo / 40 * 20)
+            if (self.matrica[broj] == 0):
+                self._display_surf.blit(self.tragovi2, (self.x2Proslo, self.y2Proslo))
+                self.matrica[broj] = 4
+            if(self.matrica[broj] == 3):
+                self._display_surf.blit(self.tragovi, (self.x2Proslo, self.y2Proslo))
+            if (self.matrica[broj] == 4):
+                self._display_surf.blit(self.tragovi2, (self.x2Proslo, self.y2Proslo))
+            self.x2Proslo = self.x2.value
+            self.y2Proslo = self.y2.value
+            self.proveri_da_je_zamka2()
+        pygame.event.pump()
+        pygame.display.update()
+
 
 def otvorena_zamka(broj_zamke):
   sleep(5)
