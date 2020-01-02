@@ -72,8 +72,8 @@ class App:
         self.block = pygame.image.load("lav.png").convert()
         self._display_surf.blit(self.block, (self.x.value, self.y.value))
         self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
-        #self.setup_enemies_randomly()
         self.prikazi_zamke()
+        self.setup_enemies_randomly()
         pygame.display.update()
         self.on_execute_Igrac()
 
@@ -194,11 +194,13 @@ class App:
     def prikazi_zamke(self):
         broj_zamki = 0
         while(True):
-            rand_x = int(random.uniform(0, 19))
-            rand_y = int(random.uniform(0, 14))
+            rand_x = int(random.uniform(1, 19))
+            rand_y = int(random.uniform(1, 14))
             broj = int(rand_x + rand_y * 20)
-            print(broj)
+           # print(broj)
             if(self.matrica[int(broj)] != 0):
+                continue
+            elif(int(broj)!=41 and int(broj)==61):
                 continue
             self.block = pygame.image.load("zamka.jpg").convert() #slika zamke
             self._display_surf.blit(self.block, (rand_x * 40, rand_y * 40))
@@ -284,19 +286,46 @@ class App:
 
 
     def setup_enemies_randomly(self):
-        number_of_enemies=0
+        distance=0
         while(True):
+          self.randomEnemy_x1=int(random.uniform(1, 19))
+          self.randomEnemy_y1=int(random.uniform(1, 14))
+          self.randomEnemy_x2=int(random.uniform(1, 19))
+          self.randomEnemy_y2=int(random.uniform(1, 14))
 
-          self.randomEnemy_x1=int(random.uniform(0, 19))
-          self.randomEnemy_y1=int(random.uniform(0, 14))
-          self.randomEnemy_x2=int(random.uniform(0, 19))
-          self.randomEnemy_y2=int(random.uniform(0, 14))
 
           number_of_first_enemy=int(self.randomEnemy_x1+self.randomEnemy_y1*20)
           number_of_second_enemy=int(self.randomEnemy_x2+self.randomEnemy_y2*20)
 
-          if(self.matrica[int(number_of_first_enemy)]!=0 or self.matrica[int(number_of_second_enemy)]!=0):#treba dodati da ne moze da dodje na matrica[1][2] mesto
-             continue
+          print("nep1",number_of_first_enemy)
+          print("nep2",number_of_second_enemy)
+
+          #-------------------------------------------------------------------------------
+          #provera kolizija za prvog neprijatelja
+          distance=number_of_first_enemy-number_of_second_enemy#da ne stanu na isto mesto
+          if(self.matrica[int(number_of_first_enemy)]!=0):#da je zid
+              continue
+          elif(int(number_of_first_enemy)==61):#ako je mesto 2 igraca
+              continue
+          elif(int(number_of_first_enemy)==41):#ako je mesto 1 igraca
+              continue
+          elif(self.matrica[int(number_of_first_enemy)]==5):#ako je zamka
+              continue
+
+
+          #--------------------------------------------------
+          #provera kolizija za drugog neprijatelja
+          if(self.matrica[int(number_of_second_enemy)] != 0):
+              continue
+          elif(int(number_of_second_enemy) == 61):
+              continue
+          elif(int(number_of_second_enemy) == 41):
+              continue
+          elif (self.matrica[int(number_of_second_enemy)] == 5):
+              continue
+          if(distance==0):
+              continue
+
           self.enemy1 = pygame.image.load("enemy1.jpg").convert()
           self.enemy2 = pygame.image.load("enemy2.jpg").convert()
           self._display_surf.blit(self.enemy1, [self.randomEnemy_x1 * 40, self.randomEnemy_y1 * 40])
