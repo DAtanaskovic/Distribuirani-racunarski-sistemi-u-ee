@@ -97,6 +97,14 @@ class App:
                     pygame.event.pump()
                     keys = pygame.key.get_pressed()
                     self.osvezi_prikaz()
+                    kraj = self.da_li_je_kraj_nivoa()
+                    if kraj:
+                        p1.terminate()
+                        p2.terminate()
+                        p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
+                        p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
+                        p1.start()
+                        p2.start()
                     if event.type == pygame.KEYDOWN:
                         if (keys[K_RIGHT]):
                             #self.moveRight()
@@ -363,6 +371,27 @@ class App:
             self.proveri_da_je_zamka2()
         pygame.event.pump()
         pygame.display.update()
+
+
+    def da_li_je_kraj_nivoa(self):
+        kraj = True
+        for i in range(0, 20 * 15):
+            if self.matrica[i] == 0:
+                kraj = False
+                break
+
+        if kraj:
+            # jos jedan uslov je potreban, da je jedan od igraca na kraju lavirinta
+            # ovde treba napraviti novi nivo, sve postaviti na pocetne vrednosti
+            self.x.value = 40
+            self.y.value = 0
+            self.x2.value = 80
+            self.y2.value = 0
+            self._display_surf.fill((34, 177, 76))
+            self.maze.draw(self._display_surf, self._block_surf)
+            self.maze.vrati_matricu_na_pocetne_vrednosti()
+
+        return kraj
 
 
 def otvorena_zamka(broj_zamke):
