@@ -90,6 +90,7 @@ class App:
             clock = pygame.time.Clock()
             while (True):
                 clock.tick(60)
+                self.broj_poena()
                 keys = 0
                 self.osvezi_sve_zamke()
                 #self.prikazi_rezultat()
@@ -393,7 +394,22 @@ class App:
 
         return kraj
 
+    def broj_poena(self):
+        sum1 = 0
+        sum2 = 0
+        for i in range(0, 20 * 15):
+            if (self.matrica[i] == 3):
+                sum1 = sum1 + 1
+            elif (self.matrica[i] == 4):
+                sum2 = sum2 + 1
+            print('rezultat1', sum1)
+            print('rezultat2', sum2)
+
+
 
 def otvorena_zamka(broj_zamke):
   sleep(5)
   broj_zamke.value = 0
+
+
+
