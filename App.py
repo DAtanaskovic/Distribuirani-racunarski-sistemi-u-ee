@@ -14,6 +14,8 @@ class App:
     windowHeight = 600
 
     def __init__(self):
+        self.ZivotiPrvogIgraca = 3
+        self.ZivotiDrugogIgraca = 3
         self.Rezultat1 = 0
         self.Rezultat2 = 0
         self._display_surf = None
@@ -91,8 +93,8 @@ class App:
             while (True):
                 clock.tick(60)
                 self.broj_poena()
-                keys = 0
                 self.osvezi_sve_zamke()
+                keys = 0
                 #self.prikazi_rezultat()
                 for event in pygame.event.get():
                     pygame.event.pump()
@@ -370,6 +372,7 @@ class App:
             self.x2Proslo = self.x2.value
             self.y2Proslo = self.y2.value
             self.proveri_da_je_zamka2()
+        self.da_li_je_neprijatelj()
         pygame.event.pump()
         pygame.display.update()
 
@@ -404,6 +407,50 @@ class App:
                 sum2 = sum2 + 1
             print('rezultat1', sum1)
             print('rezultat2', sum2)
+
+    def smanjiZivotPrvog(self):
+        self.ZivotiPrvogIgraca = self.ZivotiPrvogIgraca - 1
+
+        if self.ZivotiPrvogIgraca == 0:
+            print('Prvi igrac je izgubio sve zivote')
+            #ovde treba odraditi kraj igrice
+
+        self.x.value = 40
+        self.y.value = 0
+        self.osvezi_prikaz()
+
+    def smanjiZivotDrugog(self):
+        self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca - 1
+
+        if self.ZivotiDrugogIgraca == 0:
+            print('Drugi igrac je izgubio sve zivote')
+            #ovde treba odraditi kraj igrice
+
+        self.x2.value = 80
+        self.y2.value = 0
+        self.osvezi_prikaz()
+
+    def da_li_je_neprijatelj(self):
+        if(self.x.value == self.randomEnemy_x1*40 and self.y.value == self.randomEnemy_y1*40):
+            self.smanjiZivotPrvog()
+            print('neprijatelj')
+            # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
+
+        if (self.x.value == self.randomEnemy_x2*40 and self.y.value == self.randomEnemy_y2*40):
+            self.smanjiZivotPrvog()
+            print('neprijatelj')
+            # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
+
+        if (self.x2.value == self.randomEnemy_x1 and self.y2.value == self.randomEnemy_y1):
+            self.smanjiZivotDrugog()
+            print('neprijatelj')
+            # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
+
+        if (self.x2.value == self.randomEnemy_x2 and self.y2.value == self.randomEnemy_y2):
+            self.smanjiZivotDrugog()
+            print('neprijatelj')
+            # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
+
 
 
 
