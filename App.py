@@ -14,6 +14,9 @@ class App:
     windowHeight = 600
 
     def __init__(self):
+        self.prviIgracIzgubioZivot = False
+        self.drugiIgracIzgubioZivot = False
+        self.srce = Value('i', 0)
         self.ZivotiPrvogIgraca = 3
         self.ZivotiDrugogIgraca = 3
         self.Rezultat1 = 0
@@ -108,6 +111,16 @@ class App:
                         p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
                         p1.start()
                         p2.start()
+                    if self.prviIgracIzgubioZivot:
+                        p1.terminate()
+                        p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
+                        p1.start()
+                        self.prviIgracIzgubioZivot = False
+                    if self.drugiIgracIzgubioZivot:
+                        p2.terminate()
+                        p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
+                        p2.start()
+                        self.drugiIgracIzgubioZivot = False
                     if event.type == pygame.KEYDOWN:
                         if (keys[K_RIGHT]):
                             #self.moveRight()
@@ -434,29 +447,47 @@ class App:
         if(self.x.value == self.randomEnemy_x1*40 and self.y.value == self.randomEnemy_y1*40):
             self.smanjiZivotPrvog()
             print('neprijatelj')
+            self.prviIgracIzgubioZivot = True
             # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
 
         if (self.x.value == self.randomEnemy_x2*40 and self.y.value == self.randomEnemy_y2*40):
             self.smanjiZivotPrvog()
             print('neprijatelj')
+            self.prviIgracIzgubioZivot = True
             # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
 
-        if (self.x2.value == self.randomEnemy_x1 and self.y2.value == self.randomEnemy_y1):
+        if (self.x2.value == self.randomEnemy_x1*40 and self.y2.value == self.randomEnemy_y1*40):
             self.smanjiZivotDrugog()
             print('neprijatelj')
+            self.drugiIgracIzgubioZivot = True
             # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
 
-        if (self.x2.value == self.randomEnemy_x2 and self.y2.value == self.randomEnemy_y2):
+        if (self.x2.value == self.randomEnemy_x2*40 and self.y2.value == self.randomEnemy_y2*40):
             self.smanjiZivotDrugog()
             print('neprijatelj')
+            self.drugiIgracIzgubioZivot = True
             # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
-
 
 
 
 def otvorena_zamka(broj_zamke):
   sleep(5)
   broj_zamke.value = 0
+
+def neocekivana_sila(srce, srce_x, srce_y):
+    while True:
+        broj = int(random.uniform(3,10))
+        sleep(broj)
+
+        while (True):
+            rand_x = int(random.uniform(1, 19))
+            rand_y = int(random.uniform(1, 14))
+            broj = int(rand_x + rand_y * 20)
+            if (self.matrica[int(broj)] != 0):
+                continue
+
+        srce.value = 0
+        sleep(3)
 
 
 
