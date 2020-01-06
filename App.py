@@ -349,11 +349,7 @@ class App:
               continue
           if(distance==0):
               continue
-
-          self.enemy1 = pygame.image.load("enemy1.jpg").convert()
-          self.enemy2 = pygame.image.load("enemy2.jpg").convert()
-          self._display_surf.blit(self.enemy1, [self.randomEnemy_x1 * 40, self.randomEnemy_y1 * 40])
-          self._display_surf.blit(self.enemy2, [self.randomEnemy_x2 * 40, self.randomEnemy_y2 * 40])
+          self.draw_enemy()
           break
 
     def osvezi_prikaz(self):
@@ -467,6 +463,127 @@ class App:
             print('neprijatelj')
             self.drugiIgracIzgubioZivot = True
             # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
+
+    def draw_enemy(self): #iscrtavanje neprijatelja
+        self.enemy1 = pygame.image.load("enemy1.jpg").convert()
+        self.enemy2 = pygame.image.load("enemy2.jpg").convert()
+        self._display_surf.blit(self.enemy1, [self.randomEnemy_x1 * 40, self.randomEnemy_y1 * 40])
+        self._display_surf.blit(self.enemy2, [self.randomEnemy_x2 * 40, self.randomEnemy_y2 * 40])
+#--------------------------------------------------------------------------------------------------------------------------------
+    #pomeranje neprijatelja
+    def move_enemy(self):#treba dodati da se pre svakog menjanja koordinata, na svakom starom mestu iscrtavaju tragovi/trava
+        while (True):
+              random_generator = int(random.uniform(1, 4))
+              print("Random", random_generator)
+              if (random_generator == 1):
+                  self.randomEnemy_x1 -= 2
+                  self.randomEnemy_x2 -= 1
+                  number_of_first_enemy1 = int(self.randomEnemy_x1 + self.randomEnemy_y1 * 20)
+                  number_of_second_enemy1 = int(self.randomEnemy_x2 + self.randomEnemy_y2 * 20)
+                  distance = number_of_first_enemy - number_of_second_enemy  # da ne stanu na isto mesto
+                  if (self.matrica[int(number_of_first_enemy)] != 0):  # da je zid
+                      continue
+                  elif (int(number_of_first_enemy) == 61):  # ako je mesto 2 igraca
+                      continue
+                  elif (int(number_of_first_enemy) == 41):  # ako je mesto 1 igraca
+                      continue
+                  elif (self.matrica[int(number_of_first_enemy)] == 5):  # ako je zamka
+                      continue
+                  if (self.matrica[int(number_of_second_enemy)] != 0):
+                      continue
+                  elif (int(number_of_second_enemy) == 61):
+                      continue
+                  elif (int(number_of_second_enemy) == 41):
+                      continue
+                  elif (self.matrica[int(number_of_second_enemy)] == 5):
+                      continue
+                  if (distance == 0):
+                      continue
+                  self.draw_enemy()
+                  continue
+
+              elif (random_generator == 2):
+                  self.randomEnemy_y1 -= 2
+                  self.randomEnemy_y2 -= 1
+                  number_of_first_enemy = int(self.randomEnemy_x1 + self.randomEnemy_y1 * 20)
+                  number_of_second_enemy = int(self.randomEnemy_x2 + self.randomEnemy_y2 * 20)
+                  distance = number_of_first_enemy - number_of_second_enemy  # da ne stanu na isto mesto
+                  if (self.matrica[int(number_of_first_enemy)] != 0):  # da je zid
+                      continue
+                  elif (int(number_of_first_enemy) == 61):  # ako je mesto 2 igraca
+                      continue
+                  elif (int(number_of_first_enemy) == 41):  # ako je mesto 1 igraca
+                      continue
+                  elif (self.matrica[int(number_of_first_enemy)] == 5):  # ako je zamka
+                      continue
+                  if (self.matrica[int(number_of_second_enemy)] != 0):
+                      continue
+                  elif (int(number_of_second_enemy) == 61):
+                      continue
+                  elif (int(number_of_second_enemy) == 41):
+                      continue
+                  elif (self.matrica[int(number_of_second_enemy)] == 5):
+                      continue
+                  if (distance == 0):
+                      continue
+                  self.draw_enemy()
+                  continue
+
+              elif (random_generator == 3):
+                  self.randomEnemy_x1 += 2
+                  self.randomEnemy_x2 += 1
+                  number_of_first_enemy = int(self.randomEnemy_x1 + self.randomEnemy_y1 * 20)
+                  number_of_second_enemy = int(self.randomEnemy_x2 + self.randomEnemy_y2 * 20)
+                  distance = number_of_first_enemy - number_of_second_enemy  # da ne stanu na isto mesto
+                  if (self.matrica[int(number_of_first_enemy)] != 0):  # da je zid
+                      continue
+                  elif (int(number_of_first_enemy) == 61):  # ako je mesto 2 igraca
+                      continue
+                  elif (int(number_of_first_enemy) == 41):  # ako je mesto 1 igraca
+                      continue
+                  elif (self.matrica[int(number_of_first_enemy)] == 5):  # ako je zamka
+                      continue
+                  if (self.matrica[int(number_of_second_enemy)] != 0):
+                      continue
+                  elif (int(number_of_second_enemy) == 61):
+                      continue
+                  elif (int(number_of_second_enemy) == 41):
+                      continue
+                  elif (self.matrica[int(number_of_second_enemy)] == 5):
+                      continue
+                  if (distance == 0):
+                      continue
+                  self.draw_enemy()
+                  continue
+              elif (random_generator == 4):
+                  self.randomEnemy_y1 += 2
+                  self.randomEnemy_y2 += 1
+                  number_of_first_enemy = int(self.randomEnemy_x1 + self.randomEnemy_y1 * 20)
+                  number_of_second_enemy = int(self.randomEnemy_x2 + self.randomEnemy_y2 * 20)
+                  distance = number_of_first_enemy - number_of_second_enemy  # da ne stanu na isto mesto
+                  if (self.matrica[int(number_of_first_enemy)] != 0):  # da je zid
+                      continue
+                  elif (int(number_of_first_enemy) == 61):  # ako je mesto 2 igraca
+                      continue
+                  elif (int(number_of_first_enemy) == 41):  # ako je mesto 1 igraca
+                      continue
+                  elif (self.matrica[int(number_of_first_enemy)] == 5):  # ako je zamka
+                      continue
+                  if (self.matrica[int(number_of_second_enemy)] != 0):
+                      continue
+                  elif (int(number_of_second_enemy) == 61):
+                      continue
+                  elif (int(number_of_second_enemy) == 41):
+                      continue
+                  elif (self.matrica[int(number_of_second_enemy)] == 5):
+                      continue
+                  if (distance == 0):
+                      continue
+                  self.draw_enemy()
+                  continue
+              else:
+                  break
+#-------------------------------------------------------------------------------------------------------------------------
 
 
 
