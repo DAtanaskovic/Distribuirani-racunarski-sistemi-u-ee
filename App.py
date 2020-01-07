@@ -61,7 +61,7 @@ class App:
         self._display_surf = pygame.display.set_mode((self.windowWidth, self.windowHeight), pygame.HWSURFACE)
         self._block_surf = pygame.image.load("zid.png").convert()
         self._image_surf = pygame.image.load("lav.png").convert()
-        self.tragovi = pygame.image.load("trag.jpg").convert()
+        self.tragovi = pygame.image.load("trag.png").convert()
         self.tragovi2 = pygame.image.load("trag2.jpg").convert()
 
     def on_render(self):
@@ -585,6 +585,37 @@ class App:
                   break
 #-------------------------------------------------------------------------------------------------------------------------
 
+    def prikaz_rezultata(self):
+        self.screen = pygame.display.set_mode((self.windowWidth, self.windowHeight))
+        self.screen.blit(self._background, [0, 0])
+        self.maze.draw(self._display_surf, self._block_surf, self._zamka)
+        self.screen.blit(self.playerOne, (self.x.value, self.y.value))
+        self.screen.blit(self.playerTwo, (self.x2.value, self.y2.value))
+        self.screen.blit(self.enemyOne, (self.ex1.value, self.ey1.value))
+        self.screen.blit(self.enemyTwo, (self.ex2.value, self.ey2.value))
+        self.screen.blit(self._names, [0, 0])
+        font = pygame.font.Font('freesansbold.ttf', 12)
+        bg = (0, 0, 0)
+        black = (255, 255, 255)
+        text = font.render(self.name1, True, bg, black)
+        result = font.render(str(self.playerOnePoints), True, bg, black)
+        textRect = text.get_rect()
+        resRect = result.get_rect()
+        textRect.center = (50, 50)
+        resRect.center = (50, 70)
+        self._display_surf.blit(text, textRect)
+        self._display_surf.blit(result, resRect)
+
+        text2 = font.render(self.name2, True, bg, black)
+        result2 = font.render(str(self.playerTwoPoints), True, bg, black)
+        textRect2 = text2.get_rect()
+        res2Rect = result2.get_rect()
+        textRect2.center = (550, 50)
+        res2Rect.center = (550, 70)
+        self._display_surf.blit(text2, textRect2)
+        self._display_surf.blit(result2, res2Rect)
+
+        pygame.display.flip()
 
 
 def otvorena_zamka(broj_zamke):

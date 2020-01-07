@@ -16,7 +16,7 @@ class Example(QWidget):
 
     def initUI(self):
         self.hbox = QHBoxLayout(self)
-        self.pixmap = QPixmap("pocetna.jpg")
+        self.pixmap = QPixmap("pocetna.png")
 
         self.lbl = QLabel(self)
         self.lbl.setPixmap(self.pixmap)
@@ -28,10 +28,10 @@ class Example(QWidget):
         self.setWindowTitle('Cub Chase')
 
         self.btn = QPushButton('Start', self)
-        self.btn.move(170, 210)
+        self.btn.move(170, 250)
         self.btn.clicked.connect(self.doAction)
         self.btn.clicked.connect(self.hide)
-        self.btn.setStyleSheet("background-color: pink; color: blue; font: 15pt")
+        self.btn.setStyleSheet("background-color: green; color: yellow; font: 15pt ")
         self.btn.style
 
         #self.setFixedSize(400, 400)
