@@ -37,12 +37,12 @@ def igrac_proces(x, y, queue):
                     if (matrica[int(broj)] != 1):
                         trenutnoY = trenutnoY - 40
             if(broj == 4):  # dole
-                print('dole')
+                #print('dole')
                 if (trenutnoY + 40 <= 560):
                     broj = trenutnoX / 40 + (trenutnoY + 40) / 40 * 20
                     if (matrica[int(broj)] != 1):
                         trenutnoY = trenutnoY + 40
             x.value = trenutnoX
             y.value = trenutnoY
-            print('iz procesa', x.value, y.value)
+           # print('iz procesa', x.value, y.value)
 
