@@ -32,7 +32,7 @@ class Example(QWidget):
         self.btn.clicked.connect(self.doAction)
         self.btn.clicked.connect(self.hide)
         self.btn.setStyleSheet("background-color: green; color: yellow; font: 15pt ")
-        self.btn.style
+        #self.btn.style
 
         #self.setFixedSize(400, 400)
 
@@ -40,6 +40,7 @@ class Example(QWidget):
 
     def doAction(self):
         theApp = App()
+        print('nesto5')
         theApp.on_execute()
 
 if __name__ == '__main__':

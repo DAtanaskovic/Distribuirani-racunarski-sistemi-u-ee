@@ -9,12 +9,13 @@ import  random
 import multiprocessing
 from multiprocessing import Process, Queue, Value
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout,
-                             QLabel, QApplication, QPushButton)
-class App:
+                             QLabel, QApplication, QPushButton, QLineEdit)
+class App(QWidget):
     windowWidth = 800
     windowHeight = 600
 
     def __init__(self):
+        super().__init__()
         self.prviIgracIzgubioZivot = False
         self.drugiIgracIzgubioZivot = False
         self.srce = Value('i', 0)
@@ -59,15 +60,32 @@ class App:
         self.enemy1 = None
         self.enemy2 = None
         # ---------------------------------
+        print('nestooo')
+        self.txtbox1 = QLineEdit(self)
+        print('nestoo')
+        self.txtbox1.move(100, 100)
+        self.txtbox1.resize(93, 23)
+        self.txtbox1.setText('Poeni igraca da se prikazu')
+        self.txtbox1.setVisible(True)
 
+        self.txtbox2 = QLineEdit(self)
+        self.txtbox2.move(344, 315)
+        self.txtbox2.resize(93, 23)
+
+
+
+        self.bodovi1 = self.txtbox1.text()
+        self.bodovi2 = self.txtbox2.text()
 
     def on_init(self):
+        print('nesto2')
         pygame.init()
         self._display_surf = pygame.display.set_mode((self.windowWidth, self.windowHeight), pygame.HWSURFACE)
         self._block_surf = pygame.image.load("zid.png").convert()
         self._image_surf = pygame.image.load("lav.png").convert()
         self.tragovi = pygame.image.load("trag.png").convert()
         self.tragovi2 = pygame.image.load("trag2.jpg").convert()
+
 
     def on_render(self):
         self._display_surf.fill((34, 177, 76))
@@ -91,6 +109,7 @@ class App:
         #self.on_init()
         #if (self.on_init() == False):
            # self.running = False
+            print('nesto')
             red = Queue()
             red2 = Queue()
             p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
@@ -100,13 +119,21 @@ class App:
             clock = pygame.time.Clock()
             p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2))
             p3.start()
+
+            txtbox1 = QLineEdit(self)
+
+            txtbox1.move(100, 100)
+            txtbox1.resize(93, 23)
+            txtbox1.setText('Poeni igraca da se prikazu')
+            txtbox1.setVisible(True)
             while (True):
+                self.txtbox1.setText('kkk')
                 clock.tick(60)
                 #self.broj_poena()
                 self.osvezi_sve_zamke()
                 #self.move_enemy()
                 keys = 0
-                #self.prikazi_rezultat()
+                #self.prikaz_rezultata()
                 for event in pygame.event.get():
                     pygame.event.pump()
                     keys = pygame.key.get_pressed()
@@ -449,16 +476,26 @@ class App:
 
         return kraj
 
-    def broj_poena(self):
+    def brojPoenaPrvog(self):
         sum1 = 0
-        sum2 = 0
+
         for i in range(0, 20 * 15):
             if (self.matrica[i] == 3):
                 sum1 = sum1 + 1
-            elif (self.matrica[i] == 4):
+
+        print('rezultat1', sum1)
+        return sum1
+
+    def brojPoenaDrugog(self):
+
+        sum2 = 0
+        for i in range(0, 20 * 15):
+
+            if (self.matrica[i] == 4):
                 sum2 = sum2 + 1
-            print('rezultat1', sum1)
-            print('rezultat2', sum2)
+
+        print('rezultat2', sum2)
+        return sum2
 
     def smanjiZivotPrvog(self):
         self.ZivotiPrvogIgraca = self.ZivotiPrvogIgraca - 1
@@ -643,37 +680,57 @@ class App:
 #-------------------------------------------------------------------------------------------------------------------------
 
     def prikaz_rezultata(self):
-        self.screen = pygame.display.set_mode((self.windowWidth, self.windowHeight))
-        self.screen.blit(self._background, [0, 0])
-        self.maze.draw(self._display_surf, self._block_surf, self._zamka)
-        self.screen.blit(self.playerOne, (self.x.value, self.y.value))
-        self.screen.blit(self.playerTwo, (self.x2.value, self.y2.value))
-        self.screen.blit(self.enemyOne, (self.ex1.value, self.ey1.value))
-        self.screen.blit(self.enemyTwo, (self.ex2.value, self.ey2.value))
-        self.screen.blit(self._names, [0, 0])
+
+        self.poeniPrvogIgraca = self.brojPoenaPrvog()
+        self.poeniDrugogIgraca = self.brojPoenaDrugog()
         font = pygame.font.Font('freesansbold.ttf', 12)
         bg = (0, 0, 0)
         black = (255, 255, 255)
-        text = font.render(self.name1, True, bg, black)
-        result = font.render(str(self.playerOnePoints), True, bg, black)
-        textRect = text.get_rect()
-        resRect = result.get_rect()
-        textRect.center = (50, 50)
-        resRect.center = (50, 70)
-        self._display_surf.blit(text, textRect)
-        self._display_surf.blit(result, resRect)
+        text1 = font.render(self.bodovi1, True, bg, black)
+        result1 = font.render(str(self.poeniPrvogIgraca), True, bg, black)
+        textRect1 = text1.get_rect()
+        resRect1 = result1.get_rect()
+        textRect1.center = (50, 50)
+        resRect1.center = (50, 70)
+        self._display_surf.blit(text1, textRect1)
+        self._display_surf.blit(result1, resRect1)
 
-        text2 = font.render(self.name2, True, bg, black)
-        result2 = font.render(str(self.playerTwoPoints), True, bg, black)
+        text2 = font.render(self.bodovi2, True, bg, black)
+        result2 = font.render(str(self.poeniDrugogIgraca), True, bg, black)
         textRect2 = text2.get_rect()
-        res2Rect = result2.get_rect()
+        resRect2 = result2.get_rect()
         textRect2.center = (550, 50)
-        res2Rect.center = (550, 70)
+        resRect2.center = (550, 70)
         self._display_surf.blit(text2, textRect2)
-        self._display_surf.blit(result2, res2Rect)
+        self._display_surf.blit(result2, resRect2)
 
         pygame.display.flip()
 
+
+    def rezultat(self):
+        poeniPrvogIgraca = 0
+        poeniDrugogIgraca = 0
+        self._backgroundResult = pygame.image.load("prikazRezultata.png")
+        self.screen.blit(self._backgroundResult, [0, 0])
+        white=(255,255,255)
+        pygame.draw.rect(self._display_surf, white, (300, 200, 40, 50))
+        pygame.display.update()
+        self.poeniPrvogIgraca = self.brojPoenaPrvog()
+        self.poeniDrugogIgraca = self.brojPoenaDrugog()
+
+        wait = True
+        while wait:
+            mouse = pygame.mouse.get_pos()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    wait = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = event.pos
+                    if 300 < mouse_pos[0] < 340 and 200 < mouse_pos[1] < 250:
+                        wait = False
+
+        self.showMaze()
 
 def otvorena_zamka(broj_zamke):
   sleep(5)
