@@ -81,6 +81,9 @@ class App(QWidget):
         self.p2 = None
         self.p3 = None
 
+        self.neprijatelj_u_zamci1 = False
+        self.neprijatelj_u_zamci2 = False
+
     def on_init(self):
         pygame.init()
         self._display_surf = pygame.display.set_mode((self.windowWidth, self.windowHeight), pygame.HWSURFACE)
@@ -427,29 +430,31 @@ class App(QWidget):
         self._display_surf.blit(enemy1, [self.randomEnemy_x1.value * 40, self.randomEnemy_y1.value * 40])
         self._display_surf.blit(enemy2, [self.randomEnemy_x2.value * 40, self.randomEnemy_y2.value * 40])
         if(self.randomEnemy_x1.value != self.randomEnemy_x1_Proslo or self.randomEnemy_y1.value != self.randomEnemy_y1_Proslo):
-            print(self.randomEnemy_x1_Proslo,self.randomEnemy_y1_Proslo)
-            broj = int(self.randomEnemy_x1_Proslo + self.randomEnemy_y1_Proslo * 20)
-            print(broj)
-            if (self.matrica[broj] == 3):
-                self._display_surf.blit(self.tragovi, (self.randomEnemy_x1_Proslo*40, self.randomEnemy_y1_Proslo*40))
-            elif (self.matrica[broj] == 4):
-                self._display_surf.blit(self.tragovi2, (self.randomEnemy_x1_Proslo*40, self.randomEnemy_y1_Proslo*40))
-            else:
-                zelenaPozadina = pygame.image.load("zelenaPozadina.png").convert()
-                self._display_surf.blit(zelenaPozadina, (self.randomEnemy_x1_Proslo*40, self.randomEnemy_y1_Proslo*40))
-            self.randomEnemy_x1_Proslo = self.randomEnemy_x1.value
-            self.randomEnemy_y1_Proslo = self.randomEnemy_y1.value
+            self.da_li_je_neprijatelj_u_zamci()
+            if self.neprijatelj_u_zamci1 == False:
+                broj = int(self.randomEnemy_x1_Proslo + self.randomEnemy_y1_Proslo * 20)
+                if (self.matrica[broj] == 3):
+                    self._display_surf.blit(self.tragovi, (self.randomEnemy_x1_Proslo*40, self.randomEnemy_y1_Proslo*40))
+                elif (self.matrica[broj] == 4):
+                    self._display_surf.blit(self.tragovi2, (self.randomEnemy_x1_Proslo*40, self.randomEnemy_y1_Proslo*40))
+                else:
+                    zelenaPozadina = pygame.image.load("zelenaPozadina.png").convert()
+                    self._display_surf.blit(zelenaPozadina, (self.randomEnemy_x1_Proslo*40, self.randomEnemy_y1_Proslo*40))
+                self.randomEnemy_x1_Proslo = self.randomEnemy_x1.value
+                self.randomEnemy_y1_Proslo = self.randomEnemy_y1.value
         if (self.randomEnemy_x2.value != self.randomEnemy_x2_Proslo or self.randomEnemy_y2.value != self.randomEnemy_y2_Proslo):
-            broj = int(self.randomEnemy_x2_Proslo + self.randomEnemy_y2_Proslo * 20)
-            if (self.matrica[broj] == 3):
-                self._display_surf.blit(self.tragovi, (self.randomEnemy_x2_Proslo * 40, self.randomEnemy_y2_Proslo * 40))
-            elif (self.matrica[broj] == 4):
-                self._display_surf.blit(self.tragovi2, (self.randomEnemy_x2_Proslo * 40, self.randomEnemy_y2_Proslo * 40))
-            else:
-                zelenaPozadina = pygame.image.load("zelenaPozadina.png").convert()
-                self._display_surf.blit(zelenaPozadina, (self.randomEnemy_x2_Proslo * 40, self.randomEnemy_y2_Proslo * 40))
-            self.randomEnemy_x2_Proslo = self.randomEnemy_x2.value
-            self.randomEnemy_y2_Proslo = self.randomEnemy_y2.value
+            self.da_li_je_neprijatelj_u_zamci()
+            if self.neprijatelj_u_zamci2 == False:
+                broj = int(self.randomEnemy_x2_Proslo + self.randomEnemy_y2_Proslo * 20)
+                if (self.matrica[broj] == 3):
+                    self._display_surf.blit(self.tragovi, (self.randomEnemy_x2_Proslo * 40, self.randomEnemy_y2_Proslo * 40))
+                elif (self.matrica[broj] == 4):
+                    self._display_surf.blit(self.tragovi2, (self.randomEnemy_x2_Proslo * 40, self.randomEnemy_y2_Proslo * 40))
+                else:
+                    zelenaPozadina = pygame.image.load("zelenaPozadina.png").convert()
+                    self._display_surf.blit(zelenaPozadina, (self.randomEnemy_x2_Proslo * 40, self.randomEnemy_y2_Proslo * 40))
+                self.randomEnemy_x2_Proslo = self.randomEnemy_x2.value
+                self.randomEnemy_y2_Proslo = self.randomEnemy_y2.value
         self.da_li_je_neprijatelj()
         pygame.event.pump()
         pygame.display.update()
@@ -709,6 +714,44 @@ class App(QWidget):
         pygame.display.update()
         sleep(5)
 
+    def da_li_je_neprijatelj_u_zamci(self):
+        broj = int(self.randomEnemy_x1.value + self.randomEnemy_y1.value * 20)
+        print('broj',broj)
+        if(self.matrica[broj] == 9):
+            print('Neprijatelj1 je upao u zamku')
+            zamka = pygame.image.load("neprzamka1.jpg").convert()
+            self._display_surf.blit(zamka, (self.randomEnemy_x1.value * 40, self.randomEnemy_y1.value * 40))
+            broj = int(self.randomEnemy_x1_Proslo + self.randomEnemy_y1_Proslo * 20)
+            if (self.matrica[broj] == 3):
+                self._display_surf.blit(self.tragovi, (self.randomEnemy_x1_Proslo * 40, self.randomEnemy_y1_Proslo * 40))
+            elif (self.matrica[broj] == 4):
+                self._display_surf.blit(self.tragovi1, (self.randomEnemy_x1_Proslo * 40, self.randomEnemy_y1_Proslo * 40))
+            else:
+                zelenaPozadina = pygame.image.load("zelenaPozadina.png").convert()
+                self._display_surf.blit(zelenaPozadina, (self.randomEnemy_x1_Proslo * 40, self.randomEnemy_y1_Proslo * 40))
+            pygame.display.update()
+            self.neprijatelj_u_zamci1 = True
+            other_proc = multiprocessing.Process(target=neprijatelj_u_zamki, args=(self.neprijatelj_u_zamci1,))
+            other_proc.start()
+
+        broj = int(self.randomEnemy_x2.value + self.randomEnemy_y2.value * 20)
+        if (self.matrica[broj] == 9):
+            print('Neprijatelj2 je upao u zamku')
+            zamka = pygame.image.load("neprzamka2.jpg").convert()
+            self._display_surf.blit(zamka, (self.randomEnemy_x2.value*40, self.randomEnemy_y2.value*40))
+            broj = int(self.randomEnemy_x2_Proslo + self.randomEnemy_y2_Proslo * 20)
+            if (self.matrica[broj] == 3):
+                self._display_surf.blit(self.tragovi, (self.randomEnemy_x2_Proslo * 40, self.randomEnemy_y2_Proslo * 40))
+            elif (self.matrica[broj] == 4):
+                self._display_surf.blit(self.tragovi2, (self.randomEnemy_x2_Proslo * 40, self.randomEnemy_y2_Proslo * 40))
+            else:
+                zelenaPozadina = pygame.image.load("zelenaPozadina.png").convert()
+                self._display_surf.blit(zelenaPozadina, (self.randomEnemy_x2_Proslo * 40, self.randomEnemy_y2_Proslo * 40))
+            pygame.display.update()
+            self.neprijatelj_u_zamci2 = True
+            other_proc = multiprocessing.Process(target=neprijatelj_u_zamki, args=(self.neprijatelj_u_zamci2,))
+            other_proc.start()
+
     def rezultat(self):
         poeniPrvogIgraca = 0
         poeniDrugogIgraca = 0
@@ -735,8 +778,12 @@ class App(QWidget):
         self.showMaze()
 
 def otvorena_zamka(broj_zamke):
-  sleep(5)
+  sleep(10)
   broj_zamke.value = 0
+
+def neprijatelj_u_zamki(neprijatelj_u_zamci):
+    sleep(5)
+    neprijatelj_u_zamci.value = False
 
 def neocekivana_sila(srce, srce_x, srce_y):
     while True:

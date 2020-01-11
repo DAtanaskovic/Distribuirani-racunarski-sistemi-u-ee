@@ -40,7 +40,6 @@ class Example(QWidget):
 
     def doAction(self):
         theApp = App()
-        print('nesto5')
         theApp.on_execute()
 
 if __name__ == '__main__':
