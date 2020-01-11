@@ -16,6 +16,8 @@ class App(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.Nivo = Value('i', 1)
+        self.Prikazuj = True
         self.prviIgracIzgubioZivot = False
         self.drugiIgracIzgubioZivot = False
         self.srce = Value('i', 0)
@@ -72,19 +74,20 @@ class App(QWidget):
         self.txtbox2.move(344, 315)
         self.txtbox2.resize(93, 23)
 
-
-
         self.bodovi1 = self.txtbox1.text()
         self.bodovi2 = self.txtbox2.text()
 
+        self.p1 = None
+        self.p2 = None
+        self.p3 = None
+
     def on_init(self):
-        print('nesto2')
         pygame.init()
         self._display_surf = pygame.display.set_mode((self.windowWidth, self.windowHeight), pygame.HWSURFACE)
         self._block_surf = pygame.image.load("zid.png").convert()
         self._image_surf = pygame.image.load("lav.png").convert()
         self.tragovi = pygame.image.load("trag.png").convert()
-        self.tragovi2 = pygame.image.load("trag2.jpg").convert()
+        self.tragovi2 = pygame.image.load("crveniTrag.png").convert()
 
 
     def on_render(self):
@@ -106,19 +109,15 @@ class App(QWidget):
         self.on_execute_Igrac()
 
     def on_execute_Igrac(self):
-        #self.on_init()
-        #if (self.on_init() == False):
-           # self.running = False
-            print('nesto')
             red = Queue()
             red2 = Queue()
-            p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
-            p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
-            p1.start()
-            p2.start()
+            self.p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
+            self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
+            self.p1.start()
+            self.p2.start()
             clock = pygame.time.Clock()
-            p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2))
-            p3.start()
+            self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo))
+            self.p3.start()
 
             txtbox1 = QLineEdit(self)
 
@@ -127,34 +126,34 @@ class App(QWidget):
             txtbox1.setText('Poeni igraca da se prikazu')
             txtbox1.setVisible(True)
             while (True):
-                self.txtbox1.setText('kkk')
                 clock.tick(60)
                 #self.broj_poena()
-                self.osvezi_sve_zamke()
+                if self.Prikazuj:
+                    self.osvezi_sve_zamke()
+                    self.osvezi_prikaz()
                 #self.move_enemy()
                 keys = 0
                 #self.prikaz_rezultata()
                 for event in pygame.event.get():
                     pygame.event.pump()
                     keys = pygame.key.get_pressed()
-                    self.osvezi_prikaz()
                     kraj = self.da_li_je_kraj_nivoa()
                     if kraj:
-                        p1.terminate()
-                        p2.terminate()
-                        p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
-                        p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
-                        p1.start()
-                        p2.start()
+                        self.p1.terminate()
+                        self.p2.terminate()
+                        self.p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
+                        self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
+                        self.p1.start()
+                        self.p2.start()
                     if self.prviIgracIzgubioZivot:
-                        p1.terminate()
-                        p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
-                        p1.start()
+                        self.p1.terminate()
+                        self.p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
+                        self.p1.start()
                         self.prviIgracIzgubioZivot = False
                     if self.drugiIgracIzgubioZivot:
-                        p2.terminate()
-                        p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
-                        p2.start()
+                        self.p2.terminate()
+                        self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
+                        self.p2.start()
                         self.drugiIgracIzgubioZivot = False
                     if event.type == pygame.KEYDOWN:
                         if (keys[K_RIGHT]):
@@ -192,63 +191,63 @@ class App(QWidget):
                         if (keys[K_ESCAPE]):
                             self._running = False
 
-    def moveRight(self):
-        if (self.x + 40 <= 760):
-            #print(broj)
-            broj = (self.x + 40) / 40 + self.y / 40 * 20
-            if (self.matrica[int(broj)] != 1):
-                self.block = pygame.image.load("lav.png").convert()
-                self._display_surf.blit(self.block, (self.x + 40, self.y))
-                if (self.matrica[int(self.x / 40 + self.y / 40 * 20)] != 9):
-                    self._display_surf.blit(self.tragovi, (self.x, self.y))
-                self.proveri_da_je_zamka()
-                self.x = self.x + 40
-                self.y = self.y
-                pygame.event.pump()
-                pygame.display.update()
-
-    def moveLeft(self):
-        if (self.x - 40 >= 0):
-            broj = (self.x - 40) / 40 + self.y / 40 * 20
-           # print(broj)
-            if (self.matrica[int(broj)] != 1):
-                self.block = pygame.image.load("lav.png").convert()
-                self._display_surf.blit(self.block, (self.x - 40, self.y))
-                if (self.matrica[int(self.x / 40 + self.y / 40 * 20)] != 9):
-                    self._display_surf.blit(self.tragovi, (self.x, self.y))
-                self.proveri_da_je_zamka()
-                self.x = self.x - 40
-                self.y = self.y
-                pygame.event.pump()
-                pygame.display.update()
-
-    def moveUp(self):
-        if (self.y - 40 >= 0):
-            broj = self.x / 40 + (self.y - 40) / 40 *20
-           # print(broj)
-            if (self.matrica[int(broj)] != 1):
-                self.block = pygame.image.load("lav.png").convert()
-                self._display_surf.blit(self.block, (self.x, self.y - 40))
-                if (self.matrica[int(self.x / 40 + self.y / 40 * 20)] != 9):
-                    self._display_surf.blit(self.tragovi, (self.x, self.y))
-                self.proveri_da_je_zamka()
-                self.y = self.y - 40
-                pygame.event.pump()
-                pygame.display.update()
-
-    def moveDown(self):
-        if (self.y + 40 <= 560):
-            broj = self.x/40 + (self.y + 40)/40 * 20
-            #print(broj)
-            if(self.matrica[int(broj)] != 1 ):
-                self.block = pygame.image.load("lav.png").convert()
-                self._display_surf.blit(self.block, (self.x, self.y + 40))
-                if(self.matrica[int(self.x/40 + self.y /40 * 20)] != 9):
-                    self._display_surf.blit(self.tragovi, (self.x, self.y))
-                self.proveri_da_je_zamka()
-                self.y = self.y + 40
-                pygame.event.pump()
-                pygame.display.update()
+    # def moveRight(self):
+    #     if (self.x + 40 <= 760):
+    #         #print(broj)
+    #         broj = (self.x + 40) / 40 + self.y / 40 * 20
+    #         if (self.matrica[int(broj)] != 1):
+    #             self.block = pygame.image.load("lav.png").convert()
+    #             self._display_surf.blit(self.block, (self.x + 40, self.y))
+    #             if (self.matrica[int(self.x / 40 + self.y / 40 * 20)] != 9):
+    #                 self._display_surf.blit(self.tragovi, (self.x, self.y))
+    #             self.proveri_da_je_zamka()
+    #             self.x = self.x + 40
+    #             self.y = self.y
+    #             pygame.event.pump()
+    #             pygame.display.update()
+    #
+    # def moveLeft(self):
+    #     if (self.x - 40 >= 0):
+    #         broj = (self.x - 40) / 40 + self.y / 40 * 20
+    #        # print(broj)
+    #         if (self.matrica[int(broj)] != 1):
+    #             self.block = pygame.image.load("lav.png").convert()
+    #             self._display_surf.blit(self.block, (self.x - 40, self.y))
+    #             if (self.matrica[int(self.x / 40 + self.y / 40 * 20)] != 9):
+    #                 self._display_surf.blit(self.tragovi, (self.x, self.y))
+    #             self.proveri_da_je_zamka()
+    #             self.x = self.x - 40
+    #             self.y = self.y
+    #             pygame.event.pump()
+    #             pygame.display.update()
+    #
+    # def moveUp(self):
+    #     if (self.y - 40 >= 0):
+    #         broj = self.x / 40 + (self.y - 40) / 40 *20
+    #        # print(broj)
+    #         if (self.matrica[int(broj)] != 1):
+    #             self.block = pygame.image.load("lav.png").convert()
+    #             self._display_surf.blit(self.block, (self.x, self.y - 40))
+    #             if (self.matrica[int(self.x / 40 + self.y / 40 * 20)] != 9):
+    #                 self._display_surf.blit(self.tragovi, (self.x, self.y))
+    #             self.proveri_da_je_zamka()
+    #             self.y = self.y - 40
+    #             pygame.event.pump()
+    #             pygame.display.update()
+    #
+    # def moveDown(self):
+    #     if (self.y + 40 <= 560):
+    #         broj = self.x/40 + (self.y + 40)/40 * 20
+    #         #print(broj)
+    #         if(self.matrica[int(broj)] != 1 ):
+    #             self.block = pygame.image.load("lav.png").convert()
+    #             self._display_surf.blit(self.block, (self.x, self.y + 40))
+    #             if(self.matrica[int(self.x/40 + self.y /40 * 20)] != 9):
+    #                 self._display_surf.blit(self.tragovi, (self.x, self.y))
+    #             self.proveri_da_je_zamka()
+    #             self.y = self.y + 40
+    #             pygame.event.pump()
+    #             pygame.display.update()
 
     def prikazi_zamke(self):
         broj_zamki = 0
@@ -466,6 +465,8 @@ class App(QWidget):
         if kraj:
             # jos jedan uslov je potreban, da je jedan od igraca na kraju lavirinta
             # ovde treba napraviti novi nivo, sve postaviti na pocetne vrednosti
+            self.prikaz_rezultata()
+            self.Nivo.value = self.Nivo.value + 1
             self.x.value = 40
             self.y.value = 0
             self.x2.value = 80
@@ -473,6 +474,9 @@ class App(QWidget):
             self._display_surf.fill((34, 177, 76))
             self.maze.draw(self._display_surf, self._block_surf)
             self.maze.vrati_matricu_na_pocetne_vrednosti()
+            self.p3.terminate()
+            self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo))
+            self.p3.start()
 
         return kraj
 
@@ -502,22 +506,31 @@ class App(QWidget):
 
         if self.ZivotiPrvogIgraca == 0:
             print('Prvi igrac je izgubio sve zivote')
-            #ovde treba odraditi kraj igrice
-
-        self.x.value = 40
-        self.y.value = 0
-        self.osvezi_prikaz()
+            self.prikaz_rezultata()
+            self.Prikazuj = False
+            self.p1.terminate()
+            self.p2.terminate()
+            self.p3.terminate()
+        else:
+            self.x.value = 40
+            self.y.value = 0
+            self.osvezi_prikaz()
 
     def smanjiZivotDrugog(self):
         self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca - 1
 
         if self.ZivotiDrugogIgraca == 0:
             print('Drugi igrac je izgubio sve zivote')
+            self.prikaz_rezultata()
+            self.Prikazuj = False
+            self.p1.terminate()
+            self.p2.terminate()
+            self.p3.terminate()
             #ovde treba odraditi kraj igrice
-
-        self.x2.value = 80
-        self.y2.value = 0
-        self.osvezi_prikaz()
+        else:
+            self.x2.value = 80
+            self.y2.value = 0
+            self.osvezi_prikaz()
 
     def da_li_je_neprijatelj(self):
         if(self.x.value == self.randomEnemy_x1.value*40 and self.y.value == self.randomEnemy_y1.value*40):
@@ -680,32 +693,21 @@ class App(QWidget):
 #-------------------------------------------------------------------------------------------------------------------------
 
     def prikaz_rezultata(self):
-
-        self.poeniPrvogIgraca = self.brojPoenaPrvog()
-        self.poeniDrugogIgraca = self.brojPoenaDrugog()
-        font = pygame.font.Font('freesansbold.ttf', 12)
-        bg = (0, 0, 0)
-        black = (255, 255, 255)
-        text1 = font.render(self.bodovi1, True, bg, black)
-        result1 = font.render(str(self.poeniPrvogIgraca), True, bg, black)
-        textRect1 = text1.get_rect()
-        resRect1 = result1.get_rect()
-        textRect1.center = (50, 50)
-        resRect1.center = (50, 70)
-        self._display_surf.blit(text1, textRect1)
-        self._display_surf.blit(result1, resRect1)
-
-        text2 = font.render(self.bodovi2, True, bg, black)
-        result2 = font.render(str(self.poeniDrugogIgraca), True, bg, black)
-        textRect2 = text2.get_rect()
-        resRect2 = result2.get_rect()
-        textRect2.center = (550, 50)
-        resRect2.center = (550, 70)
-        self._display_surf.blit(text2, textRect2)
-        self._display_surf.blit(result2, resRect2)
-
-        pygame.display.flip()
-
+        rez = pygame.image.load("prikazRezultata.png").convert()
+        self._display_surf.blit(rez, (0, 0))
+        font_obj = pygame.font.Font('freesansbold.ttf', 50)
+        green = (0, 255, 0)
+        blue = (0, 0, 180)
+        text_surface_obj = font_obj.render(str(self.brojPoenaPrvog() * 100), True, green, blue)
+        text_rect_obj = text_surface_obj.get_rect()
+        text_rect_obj.center = (330, 330)
+        self._display_surf.blit(text_surface_obj, text_rect_obj)
+        text_surface_obj2 = font_obj.render(str(self.brojPoenaDrugog() * 100), True, green, blue)
+        text_rect_obj2 = text_surface_obj2.get_rect()
+        text_rect_obj2.center = (470, 330)
+        self._display_surf.blit(text_surface_obj2, text_rect_obj2)
+        pygame.display.update()
+        sleep(5)
 
     def rezultat(self):
         poeniPrvogIgraca = 0

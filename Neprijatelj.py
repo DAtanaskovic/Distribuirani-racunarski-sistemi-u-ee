@@ -2,15 +2,16 @@ import random
 from time import sleep
 from Zid import Maze
 
-def move_enemy(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnemy_y2):
+def move_enemy(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnemy_y2, nivo):
     # treba dodati da se pre svakog menjanja koordinata, na svakom starom mestu iscrtavaju tragovi/trava
     maze = Maze()
     matrica = maze.maze
+    brzina = 2 / nivo.value
     while True:
-        sleep(2)
+        sleep(brzina)
         while (True):
             random_generator = int(random.uniform(1, 5))
-            print("Random", random_generator)
+            #print("Random", random_generator)
             if (random_generator == 1):
                 temprandomEnemy_x1 = randomEnemy_x1.value - 1
                 number_of_first_enemy = int(temprandomEnemy_x1 + randomEnemy_y1.value * 20)

@@ -4,11 +4,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
     </content>
-<<<<<<< HEAD
-    <orderEntry type="jdk" jdkName="Python 3.6 (Interpreter)" jdkType="Python SDK" />
-=======
     <orderEntry type="jdk" jdkName="Python 3.6 (Korisnik)" jdkType="Python SDK" />
->>>>>>> aeeec571ae7b64c7355d657695edec9a3c147c69
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
