@@ -70,7 +70,6 @@ def move_enemy(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnemy_y2, n
                 break
         while (True):
             random_generator = int(random.uniform(1, 5))
-            print("Random", random_generator)
             if (random_generator == 1):
                 temprandomEnemy_x2 = randomEnemy_x2.value - 1
                 number_of_second_enemy = int(temprandomEnemy_x2 + randomEnemy_y2.value * 20)
