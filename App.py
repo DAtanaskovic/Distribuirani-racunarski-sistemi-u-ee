@@ -85,8 +85,8 @@ class App(QWidget):
         self.neprijatelj_u_zamci2 = False
         # --------------------------------------------------------------------------------------------------------------
         # koordinate neocekivane sile
-        self.foce_coordinateX1 = 0
-        self.force_coordinateY1 = 0
+        self.force_coordinateX1 = Value('i', 0)
+        self.force_coordinateY1 = Value('i', 0)
         self.heart = None
         self.force_coordinateX1Proslo = 0
         self.force_coordinateY1Proslo = 0
@@ -117,7 +117,6 @@ class App(QWidget):
         self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
         self.prikazi_zamke()
         self.setup_enemies_randomly()
-        self.random_setup_force()
         pygame.display.update()
         self.on_execute_Igrac()
 
@@ -131,6 +130,10 @@ class App(QWidget):
             clock = pygame.time.Clock()
             self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo))
             self.p3.start()
+            self.p4 = multiprocessing.Process(target=random_setup_force, args=(self.force_coordinateX1, self.force_coordinateY1))
+            self.p4.start()
+
+
 
             txtbox1 = QLineEdit(self)
 
@@ -466,19 +469,22 @@ class App(QWidget):
                 self.randomEnemy_x2_Proslo = self.randomEnemy_x2.value
                 self.randomEnemy_y2_Proslo = self.randomEnemy_y2.value
         if (self.force_coordinateX1.value != self.force_coordinateX1Proslo or self.force_coordinateY1.value != self.force_coordinateY1Proslo):
-                    position= int(self.force_coordinateX1Proslo + self.force_coordinateY1Proslo * 20)
-                    if (self.matrica[int(position)] == 3):
-                        self._display_surf.blit(self.tragovi,
-                                                (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
-                    elif (self.matrica[int(position)] == 4):
-                        self._display_surf.blit(self.tragovi2,
-                                                (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
-                    else:
-                        green = pygame.image.load("zelenaPozadina.png").convert()
-                        self._display_surf.blit(green,
-                                                (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
-                    self.force_coordinateX1Proslo = self.force_coordinateX1.value
-                    self.force_coordinateY1Proslo = self.force_coordinateY1.value
+            print('dovde0')
+            self.draw_force()
+            print('dovde1')
+            position = int(self.force_coordinateX1Proslo + self.force_coordinateY1Proslo * 20)
+            print('dovde2')
+            if (self.matrica[int(position)] == 3):
+                self._display_surf.blit(self.tragovi,
+                                        (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
+            elif (self.matrica[int(position)] == 4):
+                self._display_surf.blit(self.tragovi2,
+                                        (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
+            else:
+                green = pygame.image.load("zelenaPozadina.png").convert()
+                self._display_surf.blit(green, (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
+            self.force_coordinateX1Proslo = self.force_coordinateX1.value
+            self.force_coordinateY1Proslo = self.force_coordinateY1.value
         self.da_li_je_neprijatelj()
         pygame.event.pump()
         pygame.display.update()
@@ -801,41 +807,9 @@ class App(QWidget):
 
         self.showMaze()
 
-        # ---------------------------------------------------------------------------------------------------------------
-        # samo za postavljanje neocekivane sile
-    def random_setup_force(self):
-            while (True):
-                self.force_coordinateX1 = int(random.uniform(1, 19))
-                self.force_coordinateY1 = int(random.uniform(1, 14))
-                random_time = int(random.uniform(6, 10))
-
-                number_of_heart = int(self.force_coordinateX1 + self.force_coordinateY1 * 20)
-
-                if (self.matrica[int(number_of_heart)] != 0):
-                    continue
-                elif (self.matrica[int(number_of_heart)] == 61):
-                    continue
-                elif (self.matrica[int(number_of_heart)] == 41):
-                    continue
-                elif (self.randomEnemy_x1 == self.force_coordinateX1):
-                    continue
-                elif (self.randomEnemy_y1 == self.force_coordinateY1):
-                    continue
-                elif (self.randomEnemy_x2 == self.force_coordinateX1):
-                    continue
-                elif (self.randomEnemy_y2 == self.force_coordinateY1):
-                    continue
-                else:
-                    sleep(random_time)
-                    self.draw_force()
-                    self.force_coordinateX1Proslo = self.force_coordinateX1.value
-                    self.force_coordinateY1Proslo = self.force_coordinateY1.value
-                    sleep(2)
-                    continue
-
     def draw_force(self):  # iscrtaj srce
             self.heart = pygame.image.load("heart.png").convert()
-            self._display_surf.blit(self.heart, [self.force_coordinateX1 * 40, self.force_coordinateY1 * 40])
+            self._display_surf.blit(self.heart, [self.force_coordinateX1.value * 40, self.force_coordinateY1.value * 40])
             pygame.display.update()
 
     def force_act(self):#ukoliko se neko od plejera nadje na sili
@@ -844,7 +818,42 @@ class App(QWidget):
             elif (self.x2.value == self.force_coordinateX1.value * 40 and self.y2.value == self.force_coordinateY1.value * 40):
                 self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca + 1
 
+        # ---------------------------------------------------------------------------------------------------------------
+        # samo za postavljanje neocekivane sile
+def random_setup_force(force_coordinateX1, force_coordinateY1):
+    while (True):
+        print('proces')
+        force_coordinateX1_temp = int(random.uniform(1, 19))
+        force_coordinateY1_temp = int(random.uniform(1, 14))
+        random_time = int(random.uniform(6, 10))
 
+        number_of_heart = int(force_coordinateX1_temp + force_coordinateY1_temp * 20)
+
+        maze = Maze()
+        matrica = maze.maze
+
+        if (matrica[int(number_of_heart)] != 0):
+            continue
+        elif (matrica[int(number_of_heart)] == 61):
+            continue
+        elif (matrica[int(number_of_heart)] == 41):
+            continue
+        # elif (self.randomEnemy_x1 == self.force_coordinateX1):
+        #     continue
+        # elif (self.randomEnemy_y1 == self.force_coordinateY1):
+        #     continue
+        # elif (self.randomEnemy_x2 == self.force_coordinateX1):
+        #     continue
+        # elif (self.randomEnemy_y2 == self.force_coordinateY1):
+        #     continue
+        else:
+            sleep(random_time)
+            #self.draw_force()
+            force_coordinateX1.value = force_coordinateX1_temp
+            force_coordinateY1.value = force_coordinateY1_temp
+            print('proceskraj11')
+            #sleep(2)
+            print('proceskraj22')
 def otvorena_zamka(broj_zamke):
   sleep(10)
   broj_zamke.value = 0
