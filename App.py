@@ -81,8 +81,8 @@ class App(QWidget):
         self.p2 = None
         self.p3 = None
 
-        self.neprijatelj_u_zamci1 = False
-        self.neprijatelj_u_zamci2 = False
+        self.neprijatelj_u_zamci1 = Value('i', 0)
+        self.neprijatelj_u_zamci2 = Value('i', 0)
         # --------------------------------------------------------------------------------------------------------------
         # koordinate neocekivane sile
         self.force_coordinateX1 = Value('i', 0)
@@ -90,6 +90,9 @@ class App(QWidget):
         self.heart = None
         self.force_coordinateX1Proslo = 0
         self.force_coordinateY1Proslo = 0
+
+        self.redZaNeprijatelje = Queue()
+        self.posle_crtanja_srca_vrati = False
 
     # ---------------------------------------------------------------------------------------------------------------
 
@@ -128,7 +131,7 @@ class App(QWidget):
             self.p1.start()
             self.p2.start()
             clock = pygame.time.Clock()
-            self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo))
+            self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo, self.redZaNeprijatelje))
             self.p3.start()
             self.p4 = multiprocessing.Process(target=random_setup_force, args=(self.force_coordinateX1, self.force_coordinateY1))
             self.p4.start()
@@ -444,7 +447,7 @@ class App(QWidget):
         self._display_surf.blit(enemy2, [self.randomEnemy_x2.value * 40, self.randomEnemy_y2.value * 40])
         if(self.randomEnemy_x1.value != self.randomEnemy_x1_Proslo or self.randomEnemy_y1.value != self.randomEnemy_y1_Proslo):
             self.da_li_je_neprijatelj_u_zamci()
-            if self.neprijatelj_u_zamci1 == False:
+            if self.neprijatelj_u_zamci1.value == 0:
                 broj = int(self.randomEnemy_x1_Proslo + self.randomEnemy_y1_Proslo * 20)
                 if (self.matrica[broj] == 3):
                     self._display_surf.blit(self.tragovi, (self.randomEnemy_x1_Proslo*40, self.randomEnemy_y1_Proslo*40))
@@ -457,7 +460,7 @@ class App(QWidget):
                 self.randomEnemy_y1_Proslo = self.randomEnemy_y1.value
         if (self.randomEnemy_x2.value != self.randomEnemy_x2_Proslo or self.randomEnemy_y2.value != self.randomEnemy_y2_Proslo):
             self.da_li_je_neprijatelj_u_zamci()
-            if self.neprijatelj_u_zamci2 == False:
+            if self.neprijatelj_u_zamci2.value == 0:
                 broj = int(self.randomEnemy_x2_Proslo + self.randomEnemy_y2_Proslo * 20)
                 if (self.matrica[broj] == 3):
                     self._display_surf.blit(self.tragovi, (self.randomEnemy_x2_Proslo * 40, self.randomEnemy_y2_Proslo * 40))
@@ -469,22 +472,23 @@ class App(QWidget):
                 self.randomEnemy_x2_Proslo = self.randomEnemy_x2.value
                 self.randomEnemy_y2_Proslo = self.randomEnemy_y2.value
         if (self.force_coordinateX1.value != self.force_coordinateX1Proslo or self.force_coordinateY1.value != self.force_coordinateY1Proslo):
-            print('dovde0')
-            self.draw_force()
-            print('dovde1')
-            position = int(self.force_coordinateX1Proslo + self.force_coordinateY1Proslo * 20)
-            print('dovde2')
-            if (self.matrica[int(position)] == 3):
-                self._display_surf.blit(self.tragovi,
-                                        (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
-            elif (self.matrica[int(position)] == 4):
-                self._display_surf.blit(self.tragovi2,
-                                        (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
-            else:
-                green = pygame.image.load("zelenaPozadina.png").convert()
-                self._display_surf.blit(green, (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
-            self.force_coordinateX1Proslo = self.force_coordinateX1.value
-            self.force_coordinateY1Proslo = self.force_coordinateY1.value
+            if self.posle_crtanja_srca_vrati:
+                position = int(self.force_coordinateX1Proslo + self.force_coordinateY1Proslo * 20)
+                if (self.matrica[int(position)] == 3):
+                    self._display_surf.blit(self.tragovi,
+                                            (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
+                elif (self.matrica[int(position)] == 4):
+                    self._display_surf.blit(self.tragovi2,
+                                            (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
+                else:
+                    green = pygame.image.load("zelenaPozadina.png").convert()
+                    self._display_surf.blit(green, (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
+                self.posle_crtanja_srca_vrati = False
+            if self.force_coordinateX1.value != 0:
+                self.draw_force()
+                self.force_coordinateX1Proslo = self.force_coordinateX1.value
+                self.force_coordinateY1Proslo = self.force_coordinateY1.value
+                self.posle_crtanja_srca_vrati = True
         self.da_li_je_neprijatelj()
         pygame.event.pump()
         pygame.display.update()
@@ -747,7 +751,7 @@ class App(QWidget):
     def da_li_je_neprijatelj_u_zamci(self):
         broj = int(self.randomEnemy_x1.value + self.randomEnemy_y1.value * 20)
         print('broj',broj)
-        if(self.matrica[broj] == 9):
+        if(self.matrica[broj] == 9 and self.neprijatelj_u_zamci1.value == 0):
             print('Neprijatelj1 je upao u zamku')
             zamka = pygame.image.load("neprzamka1.jpg").convert()
             self._display_surf.blit(zamka, (self.randomEnemy_x1.value * 40, self.randomEnemy_y1.value * 40))
@@ -760,12 +764,14 @@ class App(QWidget):
                 zelenaPozadina = pygame.image.load("zelenaPozadina.png").convert()
                 self._display_surf.blit(zelenaPozadina, (self.randomEnemy_x1_Proslo * 40, self.randomEnemy_y1_Proslo * 40))
             pygame.display.update()
-            self.neprijatelj_u_zamci1 = True
+            self.neprijatelj_u_zamci1.value = 1
             other_proc = multiprocessing.Process(target=neprijatelj_u_zamki, args=(self.neprijatelj_u_zamci1,))
             other_proc.start()
+            self.redZaNeprijatelje.put(3)
+            print('stavljen u red')
 
         broj = int(self.randomEnemy_x2.value + self.randomEnemy_y2.value * 20)
-        if (self.matrica[broj] == 9):
+        if (self.matrica[broj] == 9  and self.neprijatelj_u_zamci2.value == 0):
             print('Neprijatelj2 je upao u zamku')
             zamka = pygame.image.load("neprzamka2.jpg").convert()
             self._display_surf.blit(zamka, (self.randomEnemy_x2.value*40, self.randomEnemy_y2.value*40))
@@ -778,9 +784,11 @@ class App(QWidget):
                 zelenaPozadina = pygame.image.load("zelenaPozadina.png").convert()
                 self._display_surf.blit(zelenaPozadina, (self.randomEnemy_x2_Proslo * 40, self.randomEnemy_y2_Proslo * 40))
             pygame.display.update()
-            self.neprijatelj_u_zamci2 = True
+            self.neprijatelj_u_zamci2.value = 1
             other_proc = multiprocessing.Process(target=neprijatelj_u_zamki, args=(self.neprijatelj_u_zamci2,))
             other_proc.start()
+            self.redZaNeprijatelje.put(4)
+            print('stavljen u red')
 
     def rezultat(self):
         poeniPrvogIgraca = 0
@@ -847,20 +855,22 @@ def random_setup_force(force_coordinateX1, force_coordinateY1):
         # elif (self.randomEnemy_y2 == self.force_coordinateY1):
         #     continue
         else:
-            sleep(random_time)
-            #self.draw_force()
+            #sleep(random_time)
             force_coordinateX1.value = force_coordinateX1_temp
             force_coordinateY1.value = force_coordinateY1_temp
-            print('proceskraj11')
-            #sleep(2)
-            print('proceskraj22')
+            print('fdf1')
+            sleep(2)
+            force_coordinateX1.value = 0
+            sleep(random_time)
+            print('fdf2')
+
 def otvorena_zamka(broj_zamke):
   sleep(10)
   broj_zamke.value = 0
 
 def neprijatelj_u_zamki(neprijatelj_u_zamci):
     sleep(5)
-    neprijatelj_u_zamci.value = False
+    neprijatelj_u_zamci.value = 0
 
 
 
