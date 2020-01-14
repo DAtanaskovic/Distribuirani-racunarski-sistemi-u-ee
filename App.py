@@ -93,6 +93,7 @@ class App(QWidget):
 
         self.redZaNeprijatelje = Queue()
         self.posle_crtanja_srca_vrati = False
+        self.igraciZajedno = False
 
     # ---------------------------------------------------------------------------------------------------------------
 
@@ -101,6 +102,7 @@ class App(QWidget):
         self._display_surf = pygame.display.set_mode((self.windowWidth, self.windowHeight), pygame.HWSURFACE)
         self._block_surf = pygame.image.load("zid.png").convert()
         self._image_surf = pygame.image.load("lav.png").convert()
+        self.drugi_igrac = pygame.image.load("igrac2.png").convert()
         self.tragovi = pygame.image.load("trag.png").convert()
         self.tragovi2 = pygame.image.load("crveniTrag.png").convert()
 
@@ -117,7 +119,7 @@ class App(QWidget):
         self.on_render()
         self.block = pygame.image.load("lav.png").convert()
         self._display_surf.blit(self.block, (self.x.value, self.y.value))
-        self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
+        self._display_surf.blit(self.drugi_igrac, (self.x2.value, self.y2.value))
         self.prikazi_zamke()
         self.setup_enemies_randomly()
         pygame.display.update()
@@ -428,7 +430,7 @@ class App(QWidget):
             self.yProslo = self.y.value
             self.proveri_da_je_zamka()
         if (self.x2.value != self.x2Proslo or self.y2.value != self.y2Proslo):
-            self.block = pygame.image.load("lav.png").convert()
+            self.block = pygame.image.load("igrac2.png").convert()
             self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
             broj = int(self.x2Proslo / 40 + self.y2Proslo / 40 * 20)
             if (self.matrica[broj] == 0):
@@ -441,6 +443,16 @@ class App(QWidget):
             self.x2Proslo = self.x2.value
             self.y2Proslo = self.y2.value
             self.proveri_da_je_zamka2()
+        if(self.x.value == self.x2.value and self.y.value == self.y2.value):
+            self.block = pygame.image.load("igracizajedno.png").convert()
+            self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
+            self.igraciZajedno = True
+        if(self.igraciZajedno and (self.x.value != self.x2.value or self.y.value != self.y2.value)):
+            self.block = pygame.image.load("lav.png").convert()
+            self._display_surf.blit(self.block, (self.x.value, self.y.value))
+            self.block = pygame.image.load("igrac2.png").convert()
+            self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
+            self.igraciZajedno = False
         enemy1 = pygame.image.load("enemy1.jpg").convert()
         enemy2 = pygame.image.load("enemy2.jpg").convert()
         self._display_surf.blit(enemy1, [self.randomEnemy_x1.value * 40, self.randomEnemy_y1.value * 40])
@@ -858,11 +870,9 @@ def random_setup_force(force_coordinateX1, force_coordinateY1):
             #sleep(random_time)
             force_coordinateX1.value = force_coordinateX1_temp
             force_coordinateY1.value = force_coordinateY1_temp
-            print('fdf1')
             sleep(2)
             force_coordinateX1.value = 0
             sleep(random_time)
-            print('fdf2')
 
 def otvorena_zamka(broj_zamke):
   sleep(10)
