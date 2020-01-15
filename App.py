@@ -585,24 +585,32 @@ class App(QWidget):
 
     def da_li_je_neprijatelj(self):
         if(self.x.value == self.randomEnemy_x1.value*40 and self.y.value == self.randomEnemy_y1.value*40):
+            if self.neprijatelj_u_zamci1.value == 1:
+                return
             self.smanjiZivotPrvog()
             print('neprijatelj')
             self.prviIgracIzgubioZivot = True
             # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
 
         if (self.x.value == self.randomEnemy_x2.value*40 and self.y.value == self.randomEnemy_y2.value*40):
+            if self.neprijatelj_u_zamci2.value == 1:
+                return
             self.smanjiZivotPrvog()
             print('neprijatelj')
             self.prviIgracIzgubioZivot = True
             # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
 
         if (self.x2.value == self.randomEnemy_x1.value*40 and self.y2.value == self.randomEnemy_y1.value*40):
+            if self.neprijatelj_u_zamci1.value == 1:
+                return
             self.smanjiZivotDrugog()
             print('neprijatelj')
             self.drugiIgracIzgubioZivot = True
             # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
 
         if (self.x2.value == self.randomEnemy_x2.value*40 and self.y2.value == self.randomEnemy_y2.value*40):
+            if self.neprijatelj_u_zamci2.value == 1:
+                return
             self.smanjiZivotDrugog()
             print('neprijatelj')
             self.drugiIgracIzgubioZivot = True
