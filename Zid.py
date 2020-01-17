@@ -48,9 +48,9 @@ class Maze:
          for i in range(0, self.M * self.N):
                 if self.maze[bx + (by * self.M)] == 1:
                     display_surf.blit(image_surf, (bx * 40, by * 40))
-                elif self.maze[bx + (by * self.M)] == 2:
-                     self.block = pygame.image.load("lav.png").convert()
-                     display_surf.blit(self.block, (bx * 40, by * 40))
+                #elif self.maze[bx + (by * self.M)] == 2:
+                     #self.block = pygame.image.load("lav.png").convert()
+                     #display_surf.blit(self.block, (bx * 40, by * 40))
 
 
 

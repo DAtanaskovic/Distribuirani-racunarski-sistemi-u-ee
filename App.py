@@ -497,7 +497,8 @@ class App(QWidget):
                     self._display_surf.blit(green, (self.force_coordinateX1Proslo * 40, self.force_coordinateY1Proslo * 40))
                 self.posle_crtanja_srca_vrati = False
             if self.force_coordinateX1.value != 0:
-                self.draw_force()
+                if self.da_li_moze_da_se_iscrta_srce():
+                    self.draw_force()
                 self.force_coordinateX1Proslo = self.force_coordinateX1.value
                 self.force_coordinateY1Proslo = self.force_coordinateY1.value
                 self.posle_crtanja_srca_vrati = True
@@ -505,6 +506,19 @@ class App(QWidget):
         pygame.event.pump()
         pygame.display.update()
 
+
+    def da_li_moze_da_se_iscrta_srce(self):
+        temp = True
+        if(self.force_coordinateX1.value == self.x.value and self.force_coordinateY1.value == self.y.value):
+            temp = False
+        if(self.force_coordinateX1.value == self.x2.value and self.force_coordinateY1.value == self.y2.value):
+            temp = False
+        if (self.force_coordinateX1.value == self.randomEnemy_x1.value and self.force_coordinateY1.value == self.randomEnemy_y1.value):
+            temp = False
+        if (self.force_coordinateX1.value == self.randomEnemy_x2.value and self.force_coordinateY1.value == self.randomEnemy_y2.value):
+            temp = False
+
+        return temp
 
     def da_li_je_kraj_nivoa(self):
         kraj = True
@@ -526,7 +540,7 @@ class App(QWidget):
             self.maze.draw(self._display_surf, self._block_surf)
             self.maze.vrati_matricu_na_pocetne_vrednosti()
             self.p3.terminate()
-            self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo))
+            self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo, self.redZaNeprijatelje))
             self.p3.start()
 
         return kraj
