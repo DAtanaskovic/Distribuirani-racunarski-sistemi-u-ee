@@ -855,30 +855,23 @@ class App(QWidget):
         else:
             return 2
 
-    def rezultat(self):
-        poeniPrvogIgraca = 0
-        poeniDrugogIgraca = 0
-        self._backgroundResult = pygame.image.load("prikazRezultata.png")
-        self.screen.blit(self._backgroundResult, [0, 0])
-        white=(255,255,255)
-        pygame.draw.rect(self._display_surf, white, (300, 200, 40, 50))
+    def rezultat_na_igrici(self):
+        font_obj = pygame.font.Font('freesansbold.ttf', 20)
+        green = (0, 255, 0)
+        blue = (0, 0, 180)
+        text_surface_obj = font_obj.render(
+            'igrac' + str(self.brojIgraca1) + ' - ' + str(self.brojPoenaPrvog() * 100) + ' zivota - ' + str(
+                self.ZivotiPrvogIgraca), True, green, blue)
+        text_rect_obj = text_surface_obj.get_rect()
+        text_rect_obj.center = (250, 10)
+        self._display_surf.blit(text_surface_obj, text_rect_obj)
+        text_surface_obj2 = font_obj.render(
+            'igrac' + str(self.brojIgraca2) + ' - ' + str(self.brojPoenaDrugog() * 100) + ' zivota - ' + str(
+                self.ZivotiDrugogIgraca), True, green, blue)
+        text_rect_obj2 = text_surface_obj2.get_rect()
+        text_rect_obj2.center = (550, 10)
+        self._display_surf.blit(text_surface_obj2, text_rect_obj2)
         pygame.display.update()
-        self.poeniPrvogIgraca = self.brojPoenaPrvog()
-        self.poeniDrugogIgraca = self.brojPoenaDrugog()
-
-        wait = True
-        while wait:
-            mouse = pygame.mouse.get_pos()
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    wait = False
-
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = event.pos
-                    if 300 < mouse_pos[0] < 340 and 200 < mouse_pos[1] < 250:
-                        wait = False
-
-        self.showMaze()
 
     def draw_force(self):  # iscrtaj srce
             self.heart = pygame.image.load("heart.png").convert()
