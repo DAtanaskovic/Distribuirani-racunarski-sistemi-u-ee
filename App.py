@@ -15,7 +15,10 @@ class App(QWidget):
     windowHeight = 600
 
     def __init__(self):
-        super().__init__()
+        #super().__init__()
+        self.brojIgraca1 = 1
+        self.brojIgraca2 = 2
+        self.krajIgrice = False
         self.Nivo = Value('i', 1)
         self.Prikazuj = True
         self.prviIgracIzgubioZivot = False
@@ -63,19 +66,19 @@ class App(QWidget):
         self.enemy2 = None
         # ---------------------------------
         print('nestooo')
-        self.txtbox1 = QLineEdit(self)
+        #self.txtbox1 = QLineEdit(self)
         print('nestoo')
-        self.txtbox1.move(100, 100)
-        self.txtbox1.resize(93, 23)
-        self.txtbox1.setText('Poeni igraca da se prikazu')
-        self.txtbox1.setVisible(True)
+        #self.txtbox1.move(100, 100)
+        #self.txtbox1.resize(93, 23)
+        #self.txtbox1.setText('Poeni igraca da se prikazu')
+        #self.txtbox1.setVisible(True)
 
-        self.txtbox2 = QLineEdit(self)
-        self.txtbox2.move(344, 315)
-        self.txtbox2.resize(93, 23)
+        #self.txtbox2 = QLineEdit(self)
+        #self.txtbox2.move(344, 315)
+        #self.txtbox2.resize(93, 23)
 
-        self.bodovi1 = self.txtbox1.text()
-        self.bodovi2 = self.txtbox2.text()
+        #self.bodovi1 = self.txtbox1.text()
+        #self.bodovi2 = self.txtbox2.text()
 
         self.p1 = None
         self.p2 = None
@@ -105,6 +108,7 @@ class App(QWidget):
         self.drugi_igrac = pygame.image.load("igrac2.png").convert()
         self.tragovi = pygame.image.load("trag.png").convert()
         self.tragovi2 = pygame.image.load("crveniTrag.png").convert()
+        self.aktivnaZamka = pygame.image.load("zamkaakt.jpg").convert()
 
 
     def on_render(self):
@@ -126,91 +130,102 @@ class App(QWidget):
         self.on_execute_Igrac()
 
     def on_execute_Igrac(self):
-            red = Queue()
-            red2 = Queue()
-            self.p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
-            self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
-            self.p1.start()
-            self.p2.start()
-            clock = pygame.time.Clock()
-            self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo, self.redZaNeprijatelje))
-            self.p3.start()
-            self.p4 = multiprocessing.Process(target=random_setup_force, args=(self.force_coordinateX1, self.force_coordinateY1))
-            self.p4.start()
+        red = Queue()
+        red2 = Queue()
+        self.p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
+        self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
+        self.p1.start()
+        self.p2.start()
+        clock = pygame.time.Clock()
+        self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo, self.redZaNeprijatelje))
+        self.p3.start()
+        self.p4 = multiprocessing.Process(target=random_setup_force, args=(self.force_coordinateX1, self.force_coordinateY1))
+        self.p4.start()
 
+        #txtbox1 = QLineEdit(self)
 
+        #txtbox1.move(100, 100)
+        #txtbox1.resize(93, 23)
+        #txtbox1.setText('Poeni igraca da se prikazu')
+        #txtbox1.setVisible(True)
+        while (True):
+            self.rezultat_na_igrici()
+            if self.krajIgrice:
+                print('doslo je do kraja')
+                #pygame.display.quit()
+                #pygame.quit()
+                break
+            clock.tick(60)
+            #self.broj_poena()
+            if self.Prikazuj:
+                self.osvezi_sve_zamke()
+                self.osvezi_prikaz()
+            #self.move_enemy()
+            keys = 0
+            #self.prikaz_rezultata()
+            for event in pygame.event.get():
+                if self.krajIgrice:
+                    print('doslo je do kraja')
+                    # pygame.display.quit()
+                    # pygame.quit()
+                    break
+                pygame.event.pump()
+                keys = pygame.key.get_pressed()
+                kraj = self.da_li_je_kraj_nivoa()
+                if kraj:
+                    self.p1.terminate()
+                    self.p2.terminate()
+                    self.p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
+                    self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
+                    self.p1.start()
+                    self.p2.start()
+                if self.prviIgracIzgubioZivot:
+                    self.p1.terminate()
+                    print('ptvaranjeprocesa')
+                    self.p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
+                    self.p1.start()
+                    self.prviIgracIzgubioZivot = False
+                if self.drugiIgracIzgubioZivot:
+                    self.p2.terminate()
+                    self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
+                    self.p2.start()
+                    self.drugiIgracIzgubioZivot = False
+                if event.type == pygame.KEYDOWN:
+                    if (keys[K_RIGHT]):
+                        #self.moveRight()
+                        red.put(2)
 
-            txtbox1 = QLineEdit(self)
+                    if (keys[K_LEFT]):
+                        #self.moveLeft()
+                        red.put(1)
 
-            txtbox1.move(100, 100)
-            txtbox1.resize(93, 23)
-            txtbox1.setText('Poeni igraca da se prikazu')
-            txtbox1.setVisible(True)
-            while (True):
-                clock.tick(60)
-                #self.broj_poena()
-                if self.Prikazuj:
-                    self.osvezi_sve_zamke()
-                    self.osvezi_prikaz()
-                #self.move_enemy()
-                keys = 0
-                #self.prikaz_rezultata()
-                for event in pygame.event.get():
-                    pygame.event.pump()
-                    keys = pygame.key.get_pressed()
-                    kraj = self.da_li_je_kraj_nivoa()
-                    if kraj:
-                        self.p1.terminate()
-                        self.p2.terminate()
-                        self.p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
-                        self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
-                        self.p1.start()
-                        self.p2.start()
-                    if self.prviIgracIzgubioZivot:
-                        self.p1.terminate()
-                        self.p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
-                        self.p1.start()
-                        self.prviIgracIzgubioZivot = False
-                    if self.drugiIgracIzgubioZivot:
-                        self.p2.terminate()
-                        self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
-                        self.p2.start()
-                        self.drugiIgracIzgubioZivot = False
-                    if event.type == pygame.KEYDOWN:
-                        if (keys[K_RIGHT]):
-                            #self.moveRight()
-                            red.put(2)
+                    if (keys[K_UP]):
+                        #self.moveUp()
+                        red.put(3)
 
-                        if (keys[K_LEFT]):
-                            #self.moveLeft()
-                            red.put(1)
+                    if (keys[K_DOWN]):
+                        red.put(4)
+                       # self.moveDown()
 
-                        if (keys[K_UP]):
-                            #self.moveUp()
-                            red.put(3)
+                    if (keys[K_d]):
+                        # self.moveRight()
+                        red2.put(2)
 
-                        if (keys[K_DOWN]):
-                            red.put(4)
-                           # self.moveDown()
+                    if (keys[K_a]):
+                        # self.moveLeft()
+                        red2.put(1)
 
-                        if (keys[K_d]):
-                            # self.moveRight()
-                            red2.put(2)
+                    if (keys[K_w]):
+                        # self.moveUp()
+                        red2.put(3)
 
-                        if (keys[K_a]):
-                            # self.moveLeft()
-                            red2.put(1)
+                    if (keys[K_s]):
+                        red2.put(4)
+                    # self.moveDown()
 
-                        if (keys[K_w]):
-                            # self.moveUp()
-                            red2.put(3)
+                    if (keys[K_ESCAPE]):
+                        self._running = False
 
-                        if (keys[K_s]):
-                            red2.put(4)
-                        # self.moveDown()
-
-                        if (keys[K_ESCAPE]):
-                            self._running = False
 
     # def moveRight(self):
     #     if (self.x + 40 <= 760):
@@ -426,6 +441,8 @@ class App(QWidget):
                 self._display_surf.blit(self.tragovi2, (self.xProslo, self.yProslo))
             if (self.matrica[broj] == 3):
                 self._display_surf.blit(self.tragovi, (self.xProslo, self.yProslo))
+            if (self.matrica[broj] == 9):
+                self._display_surf.blit(self.aktivnaZamka, (self.xProslo, self.yProslo))
             self.xProslo = self.x.value
             self.yProslo = self.y.value
             self.proveri_da_je_zamka()
@@ -440,6 +457,8 @@ class App(QWidget):
                 self._display_surf.blit(self.tragovi, (self.x2Proslo, self.y2Proslo))
             if (self.matrica[broj] == 4):
                 self._display_surf.blit(self.tragovi2, (self.x2Proslo, self.y2Proslo))
+            if (self.matrica[broj] == 9):
+                self._display_surf.blit(self.aktivnaZamka, (self.xProslo, self.yProslo))
             self.x2Proslo = self.x2.value
             self.y2Proslo = self.y2.value
             self.proveri_da_je_zamka2()
@@ -576,6 +595,8 @@ class App(QWidget):
             self.p1.terminate()
             self.p2.terminate()
             self.p3.terminate()
+            self.p4.terminate()
+            self.krajIgrice = True
         else:
             self.x.value = 40
             self.y.value = 0
@@ -591,6 +612,8 @@ class App(QWidget):
             self.p1.terminate()
             self.p2.terminate()
             self.p3.terminate()
+            self.p3.terminate()
+            self.krajIgrice = True
             #ovde treba odraditi kraj igrice
         else:
             self.x2.value = 80
@@ -823,6 +846,14 @@ class App(QWidget):
             other_proc.start()
             self.redZaNeprijatelje.put(4)
             print('stavljen u red')
+
+    def pobednik(self):
+        self.poeniPrvogIgraca = self.brojPoenaPrvog()
+        self.poeniDrugogIgraca = self.brojPoenaDrugog()
+        if self.poeniPrvogIgraca > self.poeniDrugogIgraca:
+            return 1
+        else:
+            return 2
 
     def rezultat(self):
         poeniPrvogIgraca = 0

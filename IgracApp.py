@@ -7,6 +7,7 @@ from Zid import *
 
 
 def igrac_proces(x, y, queue):
+    #print('igracproces')
     trenutnoX = x.value
     trenutnoY = y.value
     matrica = Maze().maze

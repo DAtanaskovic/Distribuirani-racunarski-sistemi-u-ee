@@ -5,6 +5,7 @@ import pygame
 
 def move_enemy(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnemy_y2, nivo, red):
     # treba dodati da se pre svakog menjanja koordinata, na svakom starom mestu iscrtavaju tragovi/trava
+    #print('neprijateljproces')
     pygame.init()
     maze = Maze()
     matrica = maze.maze
