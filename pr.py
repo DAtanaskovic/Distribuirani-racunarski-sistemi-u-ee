@@ -64,6 +64,56 @@ class Example(QWidget):
             self.text.setText(str(t))
             self.pocni_turnir()
 
+    def pocni_turnir(self):
+        ukupan_broj_igraca = int(self.text.text())
+
+        lista = []
+
+        for i in range(1, ukupan_broj_igraca+1):
+            lista.append(str(i))
+
+        lista_igraca = lista
+        lista_za_sledeci_nivo = lista
+        igrac1 = lista_igraca[0]
+        igrac2 = lista_igraca[1]
+
+        while True:
+            lista_igraca = lista_za_sledeci_nivo
+            igrac1 = lista_igraca[0]
+            igrac2 = lista_igraca[1]
+            self.trenutniIgrac1.value = int(igrac1)
+            self.trenutniIgrac2.value = int(igrac2)
+            print('lsn',lista_za_sledeci_nivo)
+            lista_za_sledeci_nivo = []
+            print(lista_igraca)
+            while len(lista_igraca) >= 2:
+                self.p1 = multiprocessing.Process(target=turnir_proces, args=(self.trenutniPobednik, self.trenutniIgrac1, self.trenutniIgrac2))
+                self.p1.start()
+                self.p1.join()
+                lista_igraca.remove(igrac1)
+                lista_igraca.remove(igrac2)
+                if(self.trenutniPobednik.value == 1):
+                    lista_za_sledeci_nivo.append(igrac1)
+                else:
+                    lista_za_sledeci_nivo.append(igrac2)
+
+            if len(lista_igraca) == 1:
+                lista_za_sledeci_nivo.append(lista_igraca[0])
+
+            if(len(lista_za_sledeci_nivo) == 1):
+                print('Kraj turnira')
+                print('Pobednik turnira je ' + lista_za_sledeci_nivo[0])
+                break
+
+def turnir_proces(trenutniPobednik, trenutniIgrac1, trenutniIgrac2):
+    theApp = App()
+    theApp.brojIgraca1 = trenutniIgrac1.value
+    theApp.brojIgraca2 = trenutniIgrac2.value
+    theApp.on_execute()
+    pobednik = theApp.pobednik()
+    trenutniPobednik.value = pobednik
+    print('Pobednik je igrac', pobednik)
+
 if __name__ == '__main__':
 
      app = QApplication(sys.argv)
