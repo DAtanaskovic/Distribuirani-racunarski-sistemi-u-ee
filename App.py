@@ -458,7 +458,7 @@ class App(QWidget):
             if (self.matrica[broj] == 4):
                 self._display_surf.blit(self.tragovi2, (self.x2Proslo, self.y2Proslo))
             if (self.matrica[broj] == 9):
-                self._display_surf.blit(self.aktivnaZamka, (self.xProslo, self.yProslo))
+                self._display_surf.blit(self.aktivnaZamka, (self.x2Proslo, self.y2Proslo))
             self.x2Proslo = self.x2.value
             self.y2Proslo = self.y2.value
             self.proveri_da_je_zamka2()
@@ -522,9 +522,25 @@ class App(QWidget):
                 self.force_coordinateY1Proslo = self.force_coordinateY1.value
                 self.posle_crtanja_srca_vrati = True
         self.da_li_je_neprijatelj()
+        self.da_li_je_stao_na_srce()
         pygame.event.pump()
         pygame.display.update()
 
+    def da_li_je_stao_na_srce(self):
+        if(self.x.value == self.force_coordinateX1.value * 40 and self.y.value == self.force_coordinateY1.value * 40):
+            self.ZivotiPrvogIgraca = self.ZivotiPrvogIgraca + 1
+            self.force_coordinateX1.value = 0
+            self.posle_crtanja_srca_vrati = False
+            self.block = pygame.image.load("lav.png").convert()
+            self._display_surf.blit(self.block, (self.x.value, self.y.value))
+            pygame.display.update()
+        if (self.x2.value == self.force_coordinateX1.value * 40 and self.y2.value == self.force_coordinateY1.value * 40):
+            self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca + 1
+            self.force_coordinateX1.value = 0
+            self.posle_crtanja_srca_vrati = False
+            self.block = pygame.image.load("igrac2.png").convert()
+            self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
+            pygame.display.update()
 
     def da_li_moze_da_se_iscrta_srce(self):
         temp = True
