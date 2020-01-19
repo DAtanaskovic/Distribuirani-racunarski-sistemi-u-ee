@@ -98,10 +98,39 @@ class Apponline(QWidget):
         self.force_coordinateX1Proslo = 0
         self.force_coordinateY1Proslo = 0
         #za network
-        self.net=NetworkProgramming.Network()
+        self.net = NetworkProgramming.Network()
         self.redZaNeprijatelje = Queue()
         self.posle_crtanja_srca_vrati = False
         self.igraciZajedno = False
+
+    def send_data(self):
+        data = str(self.net.pos) + ":" + str(self.x.value) + "," + str(self.y.value)
+        reply = self.net.send(data)
+        return reply
+
+    def send_data_neprijatelj(self):
+        data = str(3) + ":" + str(self.x.value) + "," + str(self.y.value)
+        reply = self.net.send(data)
+        return reply
+
+    @staticmethod
+    def parse_data(data):
+        try:
+            d = data.split(":")[1].split(",")
+            return int(d[0]), int(d[1])
+        except:
+            return 0, 0
+
+    @staticmethod
+    def parse_data_neprijatelj(data):
+        try:
+            d = data.split(":")[1].split(",")
+            if data.split(":")[1] == '3':
+                return int(d[0]), int(d[1])
+            else:
+                return (0, 0)
+        except:
+            return 0, 0
 
     def on_init(self):
         pygame.init()
@@ -394,9 +423,17 @@ class Apponline(QWidget):
                 self.xProslo = self.x.value
                 self.yProslo = self.y.value
                 self.proveri_da_je_zamka()
-
+        self.x2.value, self.y2.value = self.parse_data(self.send_data())
+        #if self.net.pos != 1:
+            #x1, y1 = self.parse_data_neprijatelj(self.send_data_neprijatelj())
+            #x2, y2 = self.parse_data_neprijatelj(self.send_data_neprijatelj())
+            #if x1 != 0:
+                #self.randomEnemy_x1.value = x1
+                #self.randomEnemy_y1.value = y1
+            #if x2 != 0:
+            #self.randomEnemy_x2.value = x2
+           # self.randomEnemy_y2.value = y2
         if (self.x2.value != self.x2Proslo or self.y2.value != self.y2Proslo):
-
                 self.block = pygame.image.load("igrac2.png").convert()
                 self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
                 broj = int(self.x2Proslo / 40 + self.y2Proslo / 40 * 20)
@@ -412,7 +449,6 @@ class Apponline(QWidget):
                 self.x2Proslo = self.x2.value
                 self.y2Proslo = self.y2.value
                 self.proveri_da_je_zamka2()
-
         if(self.x.value == self.x2.value and self.y.value == self.y2.value):
             self.block = pygame.image.load("igracizajedno.png").convert()
             self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
@@ -595,7 +631,7 @@ class Apponline(QWidget):
                 self.p1.terminate()
                 self.p2.terminate()
                 self.p3.terminate()
-                self.p3.terminate()
+                self.p4.terminate()
                 self.krajIgrice = True
             else:
                 self.x2.value = 18 * 40

@@ -19,7 +19,7 @@ s.listen(2)
 print("Waiting for a connection")
 
 currentId = "0"
-pos = ["0:40,0", "1:80,0"]#pocetne pozicije oba igraca
+pos = ["0:40,0", "1:80,0", "3:160,160"] #pocetne pozicije oba igraca
 def threaded_client(conn):
     global currentId, pos
     conn.send(str.encode(currentId))
@@ -40,6 +40,7 @@ def threaded_client(conn):
 
                 if id == 0: nid = 1
                 if id == 1: nid = 0
+                if id == 3: nid = 2
 
                 reply = pos[nid][:]
                 print("Sending: " + reply)
