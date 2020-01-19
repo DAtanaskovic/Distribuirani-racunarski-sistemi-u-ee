@@ -7,6 +7,7 @@ from time import sleep
 from pygame.locals import *
 import  random
 import multiprocessing
+import NetworkProgramming
 from multiprocessing import Process, Queue, Value
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout,
                              QLabel, QApplication, QPushButton, QLineEdit)
@@ -99,7 +100,8 @@ class App(QWidget):
         self.igraciZajedno = False
 
     # ---------------------------------------------------------------------------------------------------------------
-
+    #za network
+        self.net=NetworkProgramming.Network()
     def on_init(self):
         pygame.init()
         self._display_surf = pygame.display.set_mode((self.windowWidth, self.windowHeight), pygame.HWSURFACE)
