@@ -262,33 +262,31 @@ class Apponline(QWidget):
 
 
     def prikazi_zamke(self):
-        broj_zamki = 0
-        while(True):
-            rand_x = int(random.uniform(1, 19))
-            rand_y = int(random.uniform(1, 14))
+            self.block = pygame.image.load("zamka.jpg").convert()  # slika zamke
+
+            rand_x = 5
+            rand_y = 4
             broj = int(rand_x + rand_y * 20)
-           # print(broj)
-            if(self.matrica[int(broj)] != 0):
-                continue
-            elif(int(broj)!=41 and int(broj)==61):
-                continue
             self.block = pygame.image.load("zamka.jpg").convert() #slika zamke
-            self._display_surf.blit(self.block, (rand_x * 40, rand_y * 40))
-            broj_zamki = broj_zamki + 1
-
-            if(broj_zamki == 1):
-                self.Zamka1X = rand_x * 40
-                self.Zamka1Y = rand_y * 40
-            if (broj_zamki == 2):
-                self.Zamka2X = rand_x * 40
-                self.Zamka2Y = rand_y * 40
-            if (broj_zamki == 3):
-                self.Zamka3X = rand_x * 40
-                self.Zamka3Y = rand_y * 40
-
             self.matrica[int(broj)] = 5
-            if(broj_zamki == 3):
-                break
+            self.Zamka1X = rand_x * 40
+            self.Zamka1Y = rand_y * 40
+
+            rand_x = 10
+            rand_y = 11
+            broj = int(rand_x + rand_y * 20)
+            self.block = pygame.image.load("zamka.jpg").convert()  # slika zamke
+            self.matrica[int(broj)] = 5
+            self.Zamka2X = rand_x * 40
+            self.Zamka2Y = rand_y * 40
+
+            rand_x = 9
+            rand_y = 9
+            broj = int(rand_x + rand_y * 20)
+            self.block = pygame.image.load("zamka.jpg").convert()  # slika zamke
+            self.matrica[int(broj)] = 5
+            self.Zamka3X = rand_x * 40
+            self.Zamka3Y = rand_y * 40
 
     def proveri_da_je_zamka(self):
         broj = self.x.value / 40 + self.y.value / 40 * 20
@@ -356,53 +354,10 @@ class Apponline(QWidget):
 
 
     def setup_enemies_randomly(self):
-        distance=0
-        while(True):
-          self.randomEnemy_x1.value = int(random.uniform(1, 19))
-          self.randomEnemy_y1.value = int(random.uniform(1, 14))
-          self.randomEnemy_x2.value = int(random.uniform(1, 19))
-          self.randomEnemy_y2.value = int(random.uniform(1, 14))
-
-
-          number_of_first_enemy=int(self.randomEnemy_x1.value + self.randomEnemy_y1.value * 20)
-          number_of_second_enemy=int(self.randomEnemy_x2.value + self.randomEnemy_y2.value * 20)
-
-          print("nep1",number_of_first_enemy)
-          print("nep2",number_of_second_enemy)
-
-          #-------------------------------------------------------------------------------
-          #provera kolizija za prvog neprijatelja
-          distance=number_of_first_enemy-number_of_second_enemy#da ne stanu na isto mesto
-          if(self.matrica[int(number_of_first_enemy)]!=0):#da je zid
-              continue
-          elif(int(number_of_first_enemy)==61):#ako je mesto 2 igraca
-              continue
-          elif(int(number_of_first_enemy)==41):#ako je mesto 1 igraca
-              continue
-          elif(self.matrica[int(number_of_first_enemy)]==5):#ako je zamka
-              continue
-
-
-          #--------------------------------------------------
-          #provera kolizija za drugog neprijatelja
-          if(self.matrica[int(number_of_second_enemy)] != 0):
-              continue
-          elif(int(number_of_second_enemy) == 61):
-              continue
-          elif(int(number_of_second_enemy) == 41):
-              continue
-          elif (self.matrica[int(number_of_second_enemy)] == 5):
-              continue
-          if(distance==0):
-              continue
-          self.draw_enemy()
-          break
-
-        self.randomEnemy_x1_Proslo = self.randomEnemy_x1.value
-        self.randomEnemy_y1_Proslo = self.randomEnemy_y1.value
-        self.randomEnemy_x2_Proslo = self.randomEnemy_x2.value
-        self.randomEnemy_y2_Proslo = self.randomEnemy_y2.value
-
+          self.randomEnemy_x1.value = 13
+          self.randomEnemy_y1.value = 1
+          self.randomEnemy_x2.value = 2
+          self.randomEnemy_y2.value = 13
 
 
     def osvezi_prikaz(self):
