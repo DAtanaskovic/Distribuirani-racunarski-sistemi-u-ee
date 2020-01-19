@@ -7,6 +7,7 @@ from Zid import *
 from App import *
 from Igrac import *
 from IgracApp import *
+import AppOnlineNetwork
 
 class Example(QWidget):
 
@@ -44,6 +45,14 @@ class Example(QWidget):
         self.btn1.setStyleSheet("background-color: green; color: yellow; font: 15pt ")
         #self.btn.style
 
+        #za play online
+        self.btn1 = QPushButton('Play online', self)
+        self.btn1.move(170, 350)
+        self.btn1.clicked.connect(self.doOnline)
+        self.btn1.setStyleSheet("background-color: green; color: yellow; font: 15pt ")
+
+
+
         self.text = QLineEdit(self)
         self.text.move(80, 120)
         self.text.hide()
@@ -55,7 +64,9 @@ class Example(QWidget):
     def doAction(self):
         theApp = App()
         theApp.on_execute()
-
+    def doOnline(self):
+        online=AppOnlineNetwork.Apponline()
+        online.on_execute()
     def Turnir(self):
         t, ok = QInputDialog.getText(
             self, 'Input Dialog', self.text.text())
