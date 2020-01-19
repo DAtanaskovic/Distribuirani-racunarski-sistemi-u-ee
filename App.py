@@ -17,6 +17,9 @@ class App(QWidget):
 
     def __init__(self):
         #super().__init__()
+        self.ukupnoPoenaPrvog = 0
+        self.ukupnoPoenaDrugog = 0
+        self.noviNivo = False
         self.brojIgraca1 = 1
         self.brojIgraca2 = 2
         self.krajIgrice = False
@@ -98,10 +101,10 @@ class App(QWidget):
         self.redZaNeprijatelje = Queue()
         self.posle_crtanja_srca_vrati = False
         self.igraciZajedno = False
+    #-----------------------------------------------------------------------------------------------------------
+        # za network
+        self.net = NetworkProgramming.Network()
 
-    # ---------------------------------------------------------------------------------------------------------------
-    #za network
-        self.net=NetworkProgramming.Network()
     def on_init(self):
         pygame.init()
         self._display_surf = pygame.display.set_mode((self.windowWidth, self.windowHeight), pygame.HWSURFACE)
@@ -193,40 +196,41 @@ class App(QWidget):
                     self.p2.start()
                     self.drugiIgracIzgubioZivot = False
                 if event.type == pygame.KEYDOWN:
-                    if (keys[K_RIGHT]):
-                        #self.moveRight()
-                        red.put(2)
+                    self.osvezi_prikaz()
+                    if self.ZivotiPrvogIgraca > 0:
+                        if (keys[K_RIGHT]):
+                            red.put(2)
 
-                    if (keys[K_LEFT]):
-                        #self.moveLeft()
-                        red.put(1)
+                        if (keys[K_LEFT]):
+                            red.put(1)
 
-                    if (keys[K_UP]):
-                        #self.moveUp()
-                        red.put(3)
+                        if (keys[K_UP]):
+                            red.put(3)
 
-                    if (keys[K_DOWN]):
-                        red.put(4)
-                       # self.moveDown()
+                        if (keys[K_DOWN]):
+                            red.put(4)
+                           # self.moveDown()
 
-                    if (keys[K_d]):
-                        # self.moveRight()
-                        red2.put(2)
+                    if self.ZivotiDrugogIgraca > 0:
+                        if (keys[K_d]):
+                            red2.put(2)
 
-                    if (keys[K_a]):
-                        # self.moveLeft()
-                        red2.put(1)
+                        if (keys[K_a]):
+                            red2.put(1)
 
-                    if (keys[K_w]):
-                        # self.moveUp()
-                        red2.put(3)
+                        if (keys[K_w]):
+                            red2.put(3)
 
-                    if (keys[K_s]):
-                        red2.put(4)
-                    # self.moveDown()
+                        if (keys[K_s]):
+                            red2.put(4)
+                        # self.moveDown()
 
-                    if (keys[K_ESCAPE]):
-                        self._running = False
+                        if (keys[K_ESCAPE]):
+                            self._running = False
+
+                    pygame.event.pump()
+
+
 
 
     # def moveRight(self):
@@ -433,37 +437,41 @@ class App(QWidget):
 
     def osvezi_prikaz(self):
         if(self.x.value != self.xProslo or self.y.value != self.yProslo):
-            self.block = pygame.image.load("lav.png").convert()
-            self._display_surf.blit(self.block, (self.x.value, self.y.value))
-            broj = int(self.xProslo / 40 + self.yProslo / 40 * 20)
-            if(self.matrica[broj] == 0):
-                self._display_surf.blit(self.tragovi, (self.xProslo, self.yProslo))
-                self.matrica[broj] = 3
-            if (self.matrica[broj] == 4):
-                self._display_surf.blit(self.tragovi2, (self.xProslo, self.yProslo))
-            if (self.matrica[broj] == 3):
-                self._display_surf.blit(self.tragovi, (self.xProslo, self.yProslo))
-            if (self.matrica[broj] == 9):
-                self._display_surf.blit(self.aktivnaZamka, (self.xProslo, self.yProslo))
-            self.xProslo = self.x.value
-            self.yProslo = self.y.value
-            self.proveri_da_je_zamka()
+
+                self.block = pygame.image.load("lav.png").convert()
+                self._display_surf.blit(self.block, (self.x.value, self.y.value))
+                broj = int(self.xProslo / 40 + self.yProslo / 40 * 20)
+                if(self.matrica[broj] == 0):
+                    self._display_surf.blit(self.tragovi, (self.xProslo, self.yProslo))
+                    self.matrica[broj] = 3
+                if (self.matrica[broj] == 4):
+                    self._display_surf.blit(self.tragovi2, (self.xProslo, self.yProslo))
+                if (self.matrica[broj] == 3):
+                    self._display_surf.blit(self.tragovi, (self.xProslo, self.yProslo))
+                if (self.matrica[broj] == 9):
+                    self._display_surf.blit(self.aktivnaZamka, (self.xProslo, self.yProslo))
+                self.xProslo = self.x.value
+                self.yProslo = self.y.value
+                self.proveri_da_je_zamka()
+
         if (self.x2.value != self.x2Proslo or self.y2.value != self.y2Proslo):
-            self.block = pygame.image.load("igrac2.png").convert()
-            self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
-            broj = int(self.x2Proslo / 40 + self.y2Proslo / 40 * 20)
-            if (self.matrica[broj] == 0):
-                self._display_surf.blit(self.tragovi2, (self.x2Proslo, self.y2Proslo))
-                self.matrica[broj] = 4
-            if(self.matrica[broj] == 3):
-                self._display_surf.blit(self.tragovi, (self.x2Proslo, self.y2Proslo))
-            if (self.matrica[broj] == 4):
-                self._display_surf.blit(self.tragovi2, (self.x2Proslo, self.y2Proslo))
-            if (self.matrica[broj] == 9):
-                self._display_surf.blit(self.aktivnaZamka, (self.x2Proslo, self.y2Proslo))
-            self.x2Proslo = self.x2.value
-            self.y2Proslo = self.y2.value
-            self.proveri_da_je_zamka2()
+
+                self.block = pygame.image.load("igrac2.png").convert()
+                self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
+                broj = int(self.x2Proslo / 40 + self.y2Proslo / 40 * 20)
+                if (self.matrica[broj] == 0):
+                    self._display_surf.blit(self.tragovi2, (self.x2Proslo, self.y2Proslo))
+                    self.matrica[broj] = 4
+                if(self.matrica[broj] == 3):
+                    self._display_surf.blit(self.tragovi, (self.x2Proslo, self.y2Proslo))
+                if (self.matrica[broj] == 4):
+                    self._display_surf.blit(self.tragovi2, (self.x2Proslo, self.y2Proslo))
+                if (self.matrica[broj] == 9):
+                    self._display_surf.blit(self.aktivnaZamka, (self.x2Proslo, self.y2Proslo))
+                self.x2Proslo = self.x2.value
+                self.y2Proslo = self.y2.value
+                self.proveri_da_je_zamka2()
+
         if(self.x.value == self.x2.value and self.y.value == self.y2.value):
             self.block = pygame.image.load("igracizajedno.png").convert()
             self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
@@ -565,17 +573,28 @@ class App(QWidget):
                 break
 
         if kraj:
+            if self.x.value != 18 * 40 or self.y.value != 14 * 40:
+                kraj = False
+            if self.x2.value != 18 * 40 or self.y2.value != 14 * 40:
+                kraj = False
+
+        if kraj:
             # jos jedan uslov je potreban, da je jedan od igraca na kraju lavirinta
             # ovde treba napraviti novi nivo, sve postaviti na pocetne vrednosti
+            self.ukupnoPoenaPrvog = self.ukupnoPoenaPrvog + self.brojPoenaPrvog()
+            self.ukupnoPoenaDrugog = self.ukupnoPoenaDrugog + self.brojPoenaDrugog()
             self.prikaz_rezultata()
             self.Nivo.value = self.Nivo.value + 1
             self.x.value = 40
             self.y.value = 0
             self.x2.value = 80
             self.y2.value = 0
+            self.ZivotiPrvogIgraca = 3
+            self.ZivotiDrugogIgraca = 3
             self._display_surf.fill((34, 177, 76))
             self.maze.draw(self._display_surf, self._block_surf)
             self.maze.vrati_matricu_na_pocetne_vrednosti()
+            self.noviNivo = True
             self.p3.terminate()
             self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo, self.redZaNeprijatelje))
             self.p3.start()
@@ -589,7 +608,7 @@ class App(QWidget):
             if (self.matrica[i] == 3):
                 sum1 = sum1 + 1
 
-        print('rezultat1', sum1)
+        #print('rezultat1', sum1)
         return sum1
 
     def brojPoenaDrugog(self):
@@ -600,21 +619,25 @@ class App(QWidget):
             if (self.matrica[i] == 4):
                 sum2 = sum2 + 1
 
-        print('rezultat2', sum2)
+        #print('rezultat2', sum2)
         return sum2
 
     def smanjiZivotPrvog(self):
         self.ZivotiPrvogIgraca = self.ZivotiPrvogIgraca - 1
 
         if self.ZivotiPrvogIgraca == 0:
-            print('Prvi igrac je izgubio sve zivote')
-            self.prikaz_rezultata()
-            self.Prikazuj = False
-            self.p1.terminate()
-            self.p2.terminate()
-            self.p3.terminate()
-            self.p4.terminate()
-            self.krajIgrice = True
+            if self.ZivotiDrugogIgraca == 0:
+                print('Prvi igrac je izgubio sve zivote')
+                self.prikaz_rezultata()
+                self.Prikazuj = False
+                self.p1.terminate()
+                self.p2.terminate()
+                self.p3.terminate()
+                self.p4.terminate()
+                self.krajIgrice = True
+            else:
+                self.x.value = 18 * 40
+                self.y.value = 14 * 40
         else:
             self.x.value = 40
             self.y.value = 0
@@ -624,14 +647,18 @@ class App(QWidget):
         self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca - 1
 
         if self.ZivotiDrugogIgraca == 0:
-            print('Drugi igrac je izgubio sve zivote')
-            self.prikaz_rezultata()
-            self.Prikazuj = False
-            self.p1.terminate()
-            self.p2.terminate()
-            self.p3.terminate()
-            self.p3.terminate()
-            self.krajIgrice = True
+            if self.ZivotiPrvogIgraca == 0:
+                print('Drugi igrac je izgubio sve zivote')
+                self.prikaz_rezultata()
+                self.Prikazuj = False
+                self.p1.terminate()
+                self.p2.terminate()
+                self.p3.terminate()
+                self.p3.terminate()
+                self.krajIgrice = True
+            else:
+                self.x2.value = 18 * 40
+                self.y2.value = 14 * 40
             #ovde treba odraditi kraj igrice
         else:
             self.x2.value = 80
@@ -868,7 +895,7 @@ class App(QWidget):
     def pobednik(self):
         self.poeniPrvogIgraca = self.brojPoenaPrvog()
         self.poeniDrugogIgraca = self.brojPoenaDrugog()
-        if self.poeniPrvogIgraca > self.poeniDrugogIgraca:
+        if self.ukupnoPoenaPrvog > self.ukupnoPoenaPrvog:
             return 1
         else:
             return 2
