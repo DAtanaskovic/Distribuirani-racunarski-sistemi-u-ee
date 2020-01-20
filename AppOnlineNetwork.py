@@ -354,7 +354,7 @@ class Apponline(QWidget):
 
 
     def setup_enemies_randomly(self):
-          self.randomEnemy_x1.value = 13
+          self.randomEnemy_x1.value = 18
           self.randomEnemy_y1.value = 1
           self.randomEnemy_x2.value = 2
           self.randomEnemy_y2.value = 13
