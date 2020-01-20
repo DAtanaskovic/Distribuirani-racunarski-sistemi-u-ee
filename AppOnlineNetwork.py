@@ -402,10 +402,16 @@ class Apponline(QWidget):
                     self._display_surf.blit(self.tragovi2, (self.x2Proslo, self.y2Proslo))
                 if (self.matrica[broj] == 9):
                     self._display_surf.blit(self.aktivnaZamka, (self.x2Proslo, self.y2Proslo))
-                print('eveme',self.x2.value, self.y2.value)
-                if(self.x2.value == 0 and self.y2.value == 40):
-                    if((self.x2Proslo != 0 or self.x2Proslo != 40) and (self.y2Proslo != 80 or self.y2Proslo != 40)):
-                        self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca - 1
+                print('eveme', self.x2.value, self.y2.value)
+                if(self.x2.value == 40 and self.y2.value == 0):
+                    self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca - 1
+                    print(self.x2Proslo,self.y2Proslo)
+                    if (self.x2Proslo == 40 and self.y2Proslo == 40):
+                        self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca + 1
+                    if (self.x2Proslo == 80 and self.y2Proslo == 0):
+                        self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca + 1
+                    if (self.x2Proslo == 40 and self.y2Proslo == 0):
+                        self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca + 1
                 self.x2Proslo = self.x2.value
                 self.y2Proslo = self.y2.value
                 self.proveri_da_je_zamka2()
@@ -582,7 +588,7 @@ class Apponline(QWidget):
             self.osvezi_prikaz()
 
     def smanjiZivotDrugog(self):
-        self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca - 1
+        #self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca - 1
 
         if self.ZivotiDrugogIgraca == 0:
             if self.ZivotiPrvogIgraca == 0:
@@ -620,21 +626,21 @@ class Apponline(QWidget):
             self.prviIgracIzgubioZivot = True
             # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
 
-        if (self.x2.value == self.randomEnemy_x1.value*40 and self.y2.value == self.randomEnemy_y1.value*40):
-            if self.neprijatelj_u_zamci1.value == 1:
-                return
-            self.smanjiZivotDrugog()
-            print('neprijatelj')
-            self.drugiIgracIzgubioZivot = True
-            # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
-
-        if (self.x2.value == self.randomEnemy_x2.value*40 and self.y2.value == self.randomEnemy_y2.value*40):
-            if self.neprijatelj_u_zamci2.value == 1:
-                return
-            self.smanjiZivotDrugog()
-            print('neprijatelj')
-            self.drugiIgracIzgubioZivot = True
-            # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
+        # if (self.x2.value == self.randomEnemy_x1.value*40 and self.y2.value == self.randomEnemy_y1.value*40):
+        #     if self.neprijatelj_u_zamci1.value == 1:
+        #         return
+        #     self.smanjiZivotDrugog()
+        #     print('neprijatelj')
+        #     self.drugiIgracIzgubioZivot = True
+        #     # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
+        #
+        # if (self.x2.value == self.randomEnemy_x2.value*40 and self.y2.value == self.randomEnemy_y2.value*40):
+        #     if self.neprijatelj_u_zamci2.value == 1:
+        #         return
+        #     self.smanjiZivotDrugog()
+        #     print('neprijatelj')
+        #     self.drugiIgracIzgubioZivot = True
+        #     # igrac treba da izgubi zivot i vrati se na pocetnu poziciju
 
     def draw_enemy(self): #iscrtavanje neprijatelja
         print('crtaj1')
@@ -669,7 +675,7 @@ class Apponline(QWidget):
 
     def da_li_je_neprijatelj_u_zamci(self):
         broj = int(self.randomEnemy_x1.value + self.randomEnemy_y1.value * 20)
-        print('broj',broj)
+        #print('broj',broj)
         if(self.matrica[broj] == 9 and self.neprijatelj_u_zamci1.value == 0):
             print('Neprijatelj1 je upao u zamku')
             zamka = pygame.image.load("neprzamka1.jpg").convert()
