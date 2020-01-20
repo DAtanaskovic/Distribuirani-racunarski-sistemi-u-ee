@@ -102,7 +102,7 @@ class Example(QWidget):
                 self.p1.join() #ceka da se proces zavrsi
                 lista_igraca.remove(igrac1) #brisemo ove igrace iz liste jer su odigrali svoje
                 lista_igraca.remove(igrac2)
-                if(self.trenutniPobednik.value == 1): #ako je pobednik 1 dodajemo prvog igraca
+                if(self.trenutniPobednik.value == int(igrac1)): #ako je pobednik 1 dodajemo prvog igraca
                     lista_za_sledeci_nivo.append(igrac1)
                 else:
                     lista_za_sledeci_nivo.append(igrac2)

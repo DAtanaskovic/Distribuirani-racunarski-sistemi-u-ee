@@ -34,9 +34,9 @@ def move_enemy(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnemy_y2, n
                     number_of_first_enemy = int(temprandomEnemy_x1 + randomEnemy_y1.value * 20)
                     if (matrica[int(number_of_first_enemy)] != 0):  # da je zid
                         continue
-                    elif (int(number_of_first_enemy) == 61):  # ako je mesto 2 igraca
+                    elif (int(number_of_first_enemy) == 1):  # ako je mesto 2 igraca
                         continue
-                    elif (int(number_of_first_enemy) == 41):  # ako je mesto 1 igraca
+                    elif (int(number_of_first_enemy) == 2):  # ako je mesto 1 igraca
                         continue
                     elif (matrica[int(number_of_first_enemy)] == 5):  # ako je zamka
                         continue
@@ -48,9 +48,9 @@ def move_enemy(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnemy_y2, n
                     number_of_first_enemy = int(randomEnemy_x1.value + temprandomEnemy_y1 * 20)
                     if (matrica[int(number_of_first_enemy)] != 0):  # da je zid
                         continue
-                    elif (int(number_of_first_enemy) == 61):  # ako je mesto 2 igraca
+                    elif (int(number_of_first_enemy) == 1):  # ako je mesto 2 igraca
                         continue
-                    elif (int(number_of_first_enemy) == 41):  # ako je mesto 1 igraca
+                    elif (int(number_of_first_enemy) == 2):  # ako je mesto 1 igraca
                         continue
                     elif (matrica[int(number_of_first_enemy)] == 5):  # ako je zamka
                         continue
@@ -62,9 +62,9 @@ def move_enemy(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnemy_y2, n
                     number_of_first_enemy = int(temprandomEnemy_x1 + randomEnemy_y1.value * 20)
                     if (matrica[int(number_of_first_enemy)] != 0):  # da je zid
                         continue
-                    elif (int(number_of_first_enemy) == 61):  # ako je mesto 2 igraca
+                    elif (int(number_of_first_enemy) == 1):  # ako je mesto 2 igraca
                         continue
-                    elif (int(number_of_first_enemy) == 41):  # ako je mesto 1 igraca
+                    elif (int(number_of_first_enemy) == 2):  # ako je mesto 1 igraca
                         continue
                     elif (matrica[int(number_of_first_enemy)] == 5):  # ako je zamka
                         continue
@@ -75,9 +75,9 @@ def move_enemy(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnemy_y2, n
                     number_of_first_enemy = int(randomEnemy_x1.value + temprandomEnemy_y1 * 20)
                     if (matrica[int(number_of_first_enemy)] != 0):  # da je zid
                         continue
-                    elif (int(number_of_first_enemy) == 61):  # ako je mesto 2 igraca
+                    elif (int(number_of_first_enemy) == 1):  # ako je mesto 2 igraca
                         continue
-                    elif (int(number_of_first_enemy) == 41):  # ako je mesto 1 igraca
+                    elif (int(number_of_first_enemy) == 2):  # ako je mesto 1 igraca
                         continue
                     elif (matrica[int(number_of_first_enemy)] == 5):  # ako je zamka
                         continue
@@ -95,9 +95,9 @@ def move_enemy(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnemy_y2, n
                     # print(number_of_first_enemy,number_of_second_enemy)
                     if (matrica[int(number_of_second_enemy)] != 0):
                         continue
-                    elif (int(number_of_second_enemy) == 61):
+                    elif (int(number_of_second_enemy) == 1):
                         continue
-                    elif (int(number_of_second_enemy) == 41):
+                    elif (int(number_of_second_enemy) == 2):
                         continue
                     elif (matrica[int(number_of_second_enemy)] == 5):
                         continue
@@ -109,9 +109,9 @@ def move_enemy(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnemy_y2, n
                     number_of_second_enemy = int(randomEnemy_x2.value + temprandomEnemy_y2 * 20)
                     if (matrica[int(number_of_second_enemy)] != 0):
                         continue
-                    elif (int(number_of_second_enemy) == 61):
+                    elif (int(number_of_second_enemy) == 1):
                         continue
-                    elif (int(number_of_second_enemy) == 41):
+                    elif (int(number_of_second_enemy) == 2):
                         continue
                     elif (matrica[int(number_of_second_enemy)] == 5):
                         continue
@@ -123,9 +123,9 @@ def move_enemy(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnemy_y2, n
                     number_of_second_enemy = int(temprandomEnemy_x2 + randomEnemy_y2.value * 20)
                     if (matrica[int(number_of_second_enemy)] != 0):
                         continue
-                    elif (int(number_of_second_enemy) == 61):
+                    elif (int(number_of_second_enemy) == 1):
                         continue
-                    elif (int(number_of_second_enemy) == 41):
+                    elif (int(number_of_second_enemy) == 2):
                         continue
                     elif (matrica[int(number_of_second_enemy)] == 5):
                         continue
@@ -136,9 +136,9 @@ def move_enemy(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnemy_y2, n
                     number_of_second_enemy = int(randomEnemy_x2.value + temprandomEnemy_y2 * 20)
                     if (matrica[int(number_of_second_enemy)] != 0):
                         continue
-                    elif (int(number_of_second_enemy) == 61):
+                    elif (int(number_of_second_enemy) == 1):
                         continue
-                    elif (int(number_of_second_enemy) == 41):
+                    elif (int(number_of_second_enemy) == 2):
                         continue
                     elif (matrica[int(number_of_second_enemy)] == 5):
                         continue

@@ -147,7 +147,7 @@ class App(QWidget):
         while (True):
             self.rezultat_na_igrici()
             if self.krajIgrice:
-                print('doslo je do kraja')
+                print('1. doslo je do kraja')
                 #pygame.display.quit()
                 #pygame.quit()
                 break
@@ -559,6 +559,8 @@ class App(QWidget):
         if self.ZivotiPrvogIgraca == 0:
             if self.ZivotiDrugogIgraca == 0:
                 print('Prvi igrac je izgubio sve zivote')
+                self.ukupnoPoenaPrvog = self.ukupnoPoenaPrvog + self.brojPoenaPrvog()
+                self.ukupnoPoenaDrugog = self.ukupnoPoenaDrugog + self.brojPoenaDrugog()
                 self.prikaz_rezultata()
                 self.Prikazuj = False
                 self.p1.terminate()
@@ -580,12 +582,14 @@ class App(QWidget):
         if self.ZivotiDrugogIgraca == 0:
             if self.ZivotiPrvogIgraca == 0:
                 print('Drugi igrac je izgubio sve zivote')
+                self.ukupnoPoenaPrvog = self.ukupnoPoenaPrvog + self.brojPoenaPrvog()
+                self.ukupnoPoenaDrugog = self.ukupnoPoenaDrugog + self.brojPoenaDrugog()
                 self.prikaz_rezultata()
                 self.Prikazuj = False
                 self.p1.terminate()
                 self.p2.terminate()
                 self.p3.terminate()
-                self.p3.terminate()
+                self.p4.terminate()
                 self.krajIgrice = True
             else:
                 self.x2.value = 18 * 40
@@ -703,7 +707,7 @@ class App(QWidget):
     def pobednik(self):
         self.poeniPrvogIgraca = self.brojPoenaPrvog()
         self.poeniDrugogIgraca = self.brojPoenaDrugog()
-        if self.ukupnoPoenaPrvog > self.ukupnoPoenaPrvog:
+        if self.ukupnoPoenaPrvog > self.ukupnoPoenaDrugog:
             return 1
         else:
             return 2

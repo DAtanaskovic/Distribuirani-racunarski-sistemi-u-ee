@@ -272,8 +272,8 @@ class Apponline(QWidget):
             self.Zamka1X = rand_x * 40
             self.Zamka1Y = rand_y * 40
 
-            rand_x = 10
-            rand_y = 11
+            rand_x = 12
+            rand_y = 13
             broj = int(rand_x + rand_y * 20)
             self.block = pygame.image.load("zamka.jpg").convert()  # slika zamke
             self.matrica[int(broj)] = 5
@@ -388,6 +388,7 @@ class Apponline(QWidget):
             #if x2 != 0:
             #self.randomEnemy_x2.value = x2
            # self.randomEnemy_y2.value = y2
+
         if (self.x2.value != self.x2Proslo or self.y2.value != self.y2Proslo):
                 self.block = pygame.image.load("igrac2.png").convert()
                 self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
@@ -401,9 +402,14 @@ class Apponline(QWidget):
                     self._display_surf.blit(self.tragovi2, (self.x2Proslo, self.y2Proslo))
                 if (self.matrica[broj] == 9):
                     self._display_surf.blit(self.aktivnaZamka, (self.x2Proslo, self.y2Proslo))
+                print('eveme',self.x2.value, self.y2.value)
+                if(self.x2.value == 0 and self.y2.value == 40):
+                    if((self.x2Proslo != 0 or self.x2Proslo != 40) and (self.y2Proslo != 80 or self.y2Proslo != 40)):
+                        self.ZivotiDrugogIgraca = self.ZivotiDrugogIgraca - 1
                 self.x2Proslo = self.x2.value
                 self.y2Proslo = self.y2.value
                 self.proveri_da_je_zamka2()
+
         if(self.x.value == self.x2.value and self.y.value == self.y2.value):
             self.block = pygame.image.load("igracizajedno.png").convert()
             self._display_surf.blit(self.block, (self.x2.value, self.y2.value))
@@ -744,7 +750,6 @@ class Apponline(QWidget):
         # samo za postavljanje neocekivane sile
 def random_setup_force(force_coordinateX1, force_coordinateY1):
     while (True):
-        print('proces')
         force_coordinateX1_temp = int(random.uniform(1, 19))
         force_coordinateY1_temp = int(random.uniform(1, 14))
         random_time = int(random.uniform(6, 10))

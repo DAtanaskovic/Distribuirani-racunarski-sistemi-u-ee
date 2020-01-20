@@ -75,7 +75,7 @@ def move_enemy_online(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnem
                 randomEnemy_x1.value = temprandomEnemy_x1
 
             elif (random_generator == 3):  #dole
-                print('gore')
+                #print('gore')
                 temprandomEnemy_y1 = randomEnemy_y1.value + 1
                 # number_of_first_enemy = int(randomEnemy_x1.value + temprandomEnemy_y1 * 20)
                 # if (matrica[int(number_of_first_enemy)] != 0):  # da je zid
