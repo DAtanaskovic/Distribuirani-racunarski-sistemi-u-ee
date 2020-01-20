@@ -32,8 +32,8 @@ def move_enemy_online(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnem
                 if random_generator == 5:
                     random_generator = 1
 
-                if (random_generator == 1):
-                    temprandomEnemy_x1 = randomEnemy_x1.value - 1
+                if (random_generator == 4):
+                    temprandomEnemy_x1 = randomEnemy_x1.value - 1    #levo
                     number_of_first_enemy = int(temprandomEnemy_x1 + randomEnemy_y1.value * 20)
                     if (matrica[int(number_of_first_enemy)] != 0):  # da je zid
                         continue
@@ -46,7 +46,7 @@ def move_enemy_online(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnem
                     randomEnemy_x1.value = temprandomEnemy_x1
                     break
 
-                elif (random_generator == 2):
+                elif (random_generator == 2):  # dole
                     temprandomEnemy_y1 = randomEnemy_y1.value - 1
                     number_of_first_enemy = int(randomEnemy_x1.value + temprandomEnemy_y1 * 20)
                     if (matrica[int(number_of_first_enemy)] != 0):  # da je zid
@@ -60,7 +60,7 @@ def move_enemy_online(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnem
                     randomEnemy_y1.value = temprandomEnemy_y1
                     break
 
-                elif (random_generator == 3):
+                elif (random_generator == 1):  # desno
                     temprandomEnemy_x1 = randomEnemy_x1.value + 1
                     number_of_first_enemy = int(temprandomEnemy_x1 + randomEnemy_y1.value * 20)
                     if (matrica[int(number_of_first_enemy)] != 0):  # da je zid
@@ -73,7 +73,7 @@ def move_enemy_online(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnem
                         continue
                     randomEnemy_x1.value = temprandomEnemy_x1
                     break
-                elif (random_generator == 4):
+                elif (random_generator == 3):  #gore
                     temprandomEnemy_y1 = randomEnemy_y1.value + 1
                     number_of_first_enemy = int(randomEnemy_x1.value + temprandomEnemy_y1 * 20)
                     if (matrica[int(number_of_first_enemy)] != 0):  # da je zid
@@ -95,7 +95,7 @@ def move_enemy_online(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnem
                 random_generator = random_generator + 1
                 if random_generator == 5:
                     random_generator = 1
-                if (random_generator == 1):
+                if (random_generator == 4):
                     temprandomEnemy_x2 = randomEnemy_x2.value - 1
                     number_of_second_enemy = int(temprandomEnemy_x2 + randomEnemy_y2.value * 20)
                     # print(number_of_first_enemy,number_of_second_enemy)
@@ -124,7 +124,7 @@ def move_enemy_online(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnem
                     randomEnemy_y2.value = temprandomEnemy_y2
                     break
 
-                elif (random_generator == 3):
+                elif (random_generator == 1):
                     temprandomEnemy_x2 = randomEnemy_x2.value + 1
                     number_of_second_enemy = int(temprandomEnemy_x2 + randomEnemy_y2.value * 20)
                     if (matrica[int(number_of_second_enemy)] != 0):
@@ -137,7 +137,7 @@ def move_enemy_online(randomEnemy_x1, randomEnemy_x2, randomEnemy_y1, randomEnem
                         continue
                     randomEnemy_x2.value = temprandomEnemy_x2
                     break
-                elif (random_generator == 4):
+                elif (random_generator == 3):
                     temprandomEnemy_y2 = randomEnemy_y2.value + 1
                     number_of_second_enemy = int(randomEnemy_x2.value + temprandomEnemy_y2 * 20)
                     if (matrica[int(number_of_second_enemy)] != 0):
