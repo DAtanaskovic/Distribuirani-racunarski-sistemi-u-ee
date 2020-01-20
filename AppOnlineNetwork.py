@@ -165,9 +165,9 @@ class Apponline(QWidget):
         red = Queue()
         red2 = Queue()
         self.p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
-        self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
+        #self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
         self.p1.start()
-        self.p2.start()
+        #self.p2.start()
         clock = pygame.time.Clock()
         self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo, self.redZaNeprijatelje))
         self.p3.start()
@@ -206,11 +206,11 @@ class Apponline(QWidget):
                 kraj = self.da_li_je_kraj_nivoa()
                 if kraj:
                     self.p1.terminate()
-                    self.p2.terminate()
+                    #self.p2.terminate()
                     self.p1 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x, self.y, red))
-                    self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
+                    #self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
                     self.p1.start()
-                    self.p2.start()
+                    #self.p2.start()
                 if self.prviIgracIzgubioZivot:
                     self.p1.terminate()
                     print('ptvaranjeprocesa')
@@ -218,9 +218,9 @@ class Apponline(QWidget):
                     self.p1.start()
                     self.prviIgracIzgubioZivot = False
                 if self.drugiIgracIzgubioZivot:
-                    self.p2.terminate()
-                    self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
-                    self.p2.start()
+                    #self.p2.terminate()
+                    #self.p2 = multiprocessing.Process(target=IgracApp.igrac_proces, args=(self.x2, self.y2, red2))
+                    #self.p2.start()
                     self.drugiIgracIzgubioZivot = False
                 if event.type == pygame.KEYDOWN:
                     self.osvezi_prikaz()
@@ -563,7 +563,7 @@ class Apponline(QWidget):
                 self.prikaz_rezultata()
                 self.Prikazuj = False
                 self.p1.terminate()
-                self.p2.terminate()
+                #self.p2.terminate()
                 self.p3.terminate()
                 self.p4.terminate()
                 self.krajIgrice = True
@@ -584,7 +584,7 @@ class Apponline(QWidget):
                 self.prikaz_rezultata()
                 self.Prikazuj = False
                 self.p1.terminate()
-                self.p2.terminate()
+                #self.p2.terminate()
                 self.p3.terminate()
                 self.p4.terminate()
                 self.krajIgrice = True
