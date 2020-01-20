@@ -2,7 +2,7 @@ import  pygame
 from Zid import *
 from Igrac import*
 import IgracApp
-import Neprijatelj
+import NeprijateljOnline
 from time import sleep
 from pygame.locals import *
 import  random
@@ -169,7 +169,7 @@ class Apponline(QWidget):
         self.p1.start()
         #self.p2.start()
         clock = pygame.time.Clock()
-        self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo, self.redZaNeprijatelje))
+        self.p3 = multiprocessing.Process(target=NeprijateljOnline.move_enemy_online, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo, self.redZaNeprijatelje))
         self.p3.start()
         self.p4 = multiprocessing.Process(target=random_setup_force, args=(self.force_coordinateX1, self.force_coordinateY1))
         self.p4.start()
@@ -528,7 +528,7 @@ class Apponline(QWidget):
             self.maze.vrati_matricu_na_pocetne_vrednosti()
             self.noviNivo = True
             self.p3.terminate()
-            self.p3 = multiprocessing.Process(target=Neprijatelj.move_enemy, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo, self.redZaNeprijatelje))
+            self.p3 = multiprocessing.Process(target=NeprijateljOnline.move_enemy_online, args=(self.randomEnemy_x1, self.randomEnemy_x2, self.randomEnemy_y1, self.randomEnemy_y2, self.Nivo, self.redZaNeprijatelje))
             self.p3.start()
 
         return kraj
